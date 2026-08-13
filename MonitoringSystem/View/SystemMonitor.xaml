@@ -128,7 +128,7 @@
 
                     <!--管道-->
 
-                    <myCtl:Pinpeline Height="5" Width="40" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="162,0,0,30" Direction="2" LiquidColor="Green"/>
+                    <myCtl:Pinpeline Height="5" Width="40" CapRadius="3" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="162,0,0,30" Direction="2" LiquidColor="Green"/>
                     <myCtl:Pinpeline Height="5" Width="33"  CapRadius="2" VerticalAlignment="Top" HorizontalAlignment="Left"  Direction="2"  LiquidColor="Green" Margin="184,181,0,0" RenderTransformOrigin="0.72,1.078"/>
                     <myCtl:Pinpeline Height="5" Width="29"  CapRadius="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="208,140,0,0" Direction="2" LiquidColor="Green" RenderTransformOrigin="0.5,0.5">
                         <myCtl:Pinpeline.RenderTransform>
