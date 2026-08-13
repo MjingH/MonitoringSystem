@@ -1,0 +1,16 @@
+﻿<local:ComponentBase x:Class="WpfControlLibrary1.PolygonTower"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfControlLibrary1"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Viewbox Stretch="Uniform">
+        <Canvas Width="1024" Height="1024">
+            <Path Data="M64 256v384l256 160V416z" Fill="#3395E4"/>
+            <Path Data="M320 416h640v384H320z" Fill="#56ACF2"/>
+            <Path Data="M704 256H64l256 160h640z" Fill="#8FCAFA"/>
+        </Canvas>
+    </Viewbox>
+</local:ComponentBase>

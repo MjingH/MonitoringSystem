@@ -1,0 +1,413 @@
+﻿<UserControl x:Class="MonitoringSystem.View.SystemMonitor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MonitoringSystem.View"
+             xmlns:myCtl="clr-namespace:WpfControlLibrary1;assembly=WpfControlLibrary1"
+             xmlns:vm="clr-namespace:MonitoringSystem.ViewModel"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:base="clr-namespace:MonitoringSystem.Base"
+             xmlns:converter="clr-namespace:MonitoringSystem.Base.Converter"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="1200">
+    <UserControl.Resources>
+        <!--<vm:SystemMonitorViewModel x:Key="smVM"/>-->
+        <vm:SystemMonitorViewModel x:Key="smVM"/>
+        <converter:BoolToVisvilityConverter x:Key="BoolToVisvilityConverter"/>
+        <ControlTemplate TargetType="ToggleButton" x:Key="StateButtonTemplate">
+            <Border CornerRadius="3" Background="#EEE" Height="20" Name="back" Width="50">
+                <Grid>
+                    <TextBlock Text="停机" VerticalAlignment="Center" Margin="4,0" FontSize="9"/>
+                    <TextBlock Text="运行" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="9" Margin="4,0"/>
+                    <Border Margin="2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="26" Background="#DDD" CornerRadius="2" Height="20">
+                        <TextBlock Text="||" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="9"/>
+                        <Border.RenderTransform>
+                            <TranslateTransform X="22" x:Name="tt"/>
+                        </Border.RenderTransform>
+                    </Border>
+                </Grid>
+            </Border> 
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Duration="0:0:0:0.2" To="0" Storyboard.TargetName="tt" Storyboard.TargetProperty="X"/>
+                                <ColorAnimation Duration="0:0:0:0.2" To="#38baec" Storyboard.TargetName="back" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Duration="0:0:0.2"  Storyboard.TargetName="tt" Storyboard.TargetProperty="X"/>
+                                <ColorAnimation Duration="0:0:0.2"  Storyboard.TargetName="back" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <ControlTemplate TargetType="ToggleButton" x:Key="WarningButtonTemplate">
+            <Image Source="/Assets/Image/报警红灯.png" Width="100" Height="20" x:Name="txt"  Opacity="0" HorizontalAlignment="Right"/>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Opacity" Value="1" TargetName="txt"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </UserControl.Resources>
+    <Grid  DataContext="{Binding Source={StaticResource smVM}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+        <Canvas Background="Transparent" 
+                MouseWheel="Canvas_MouseWheel"
+                MouseLeftButtonDown="Canvas_MouseLeftButtonDown"
+                MouseLeftButtonUp="Canvas_MouseLeftButtonUp"
+                MouseMove="Canvas_MouseMove">
+            <Viewbox Canvas.Left="0" Canvas.Top="340"  Name="mainView">
+                <Grid>
+
+                    <!--多边形塔-->
+                    <myCtl:PolygonTower Height="70" Width="70" Panel.ZIndex="1" Margin="442,101,689,83" RenderTransformOrigin="0.5,0.5">
+                        <myCtl:PolygonTower.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="0.859"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:PolygonTower.RenderTransform>
+                    </myCtl:PolygonTower>
+
+                    <myCtl:PolygonTower Height="70" Width="70" Panel.ZIndex="1" Margin="520,102,611,82" RenderTransformOrigin="0.5,0.5">
+                        <myCtl:PolygonTower.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="0.859"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:PolygonTower.RenderTransform>
+                    </myCtl:PolygonTower>
+                    
+                    <!--背景-->
+                    <Polygon VerticalAlignment="Top" Fill="#AAF7F9FA" Points="0,200 150,0 1000,0 1200,200 0,200" Stroke="#DDDFFDFF" StrokeThickness="2" Margin="-17,53,16,0"/>
+                   
+                    <!--冷却塔-->
+                    <myCtl:CoolingTower Width="90" Height="110" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="125,0,0,95"
+                                        Command="{Binding Path=(vm:SystemMonitorViewModel.conponentCommand)}"
+                                        CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[2]}"
+                                        IsRunning="{Binding Path=(base:GlobalMonitor.DeviceList)[2].IsRuning}"
+                                        IsFault="{Binding Path=(base:GlobalMonitor.DeviceList)[2].IsWarning}"/>
+                    <myCtl:CoolingTower Width="95" Height="115" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="98,0,0,52"
+                                         Command="{Binding Path=(vm:SystemMonitorViewModel.conponentCommand)}"
+                                         CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[1]}"
+                                        IsRunning="{Binding Path=(base:GlobalMonitor.DeviceList)[1].IsRuning}"
+                                        IsFault="{Binding Path=(base:GlobalMonitor.DeviceList)[1].IsWarning}"/>
+                    <myCtl:CoolingTower Width="100" Height="120" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="70,0,0,10"
+                                         Command="{Binding Path=(vm:SystemMonitorViewModel.conponentCommand)}"
+                                         CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[0]}"
+                                        IsRunning="{Binding Path=(base:GlobalMonitor.DeviceList)[0].IsRuning}"
+                                        IsFault="{Binding Path=(base:GlobalMonitor.DeviceList)[0].IsWarning}"/>
+
+
+                    <!--冷却泵-->
+                    <myCtl:CoolingPump Panel.ZIndex="2" Width="70" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="280,0,0,8"
+                                       Command="{Binding conponentCommand}"
+                                       CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[3]}"
+                                       IsFault="{Binding Path=(base:GlobalMonitor.DeviceList)[3].IsWarning}" 
+                                       IsRunning="{Binding Path=(base:GlobalMonitor.DeviceList)[3].IsRuning}"/>
+                    <myCtl:CoolingPump Panel.ZIndex="2" Width="67" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="295,0,0,52" IsFault="True" IsRunning="True" Loaded="CoolingPump_Loaded_1"/>
+                    <myCtl:CoolingPump Panel.ZIndex="2" Width="66" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="307,0,0,96" IsFault="True" IsRunning="True"/>
+
+                    <!--管道-->
+
+                    <myCtl:Pinpeline Height="5" Width="40" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="162,0,0,30" Direction="2" LiquidColor="Green"/>
+                    <myCtl:Pinpeline Height="5" Width="33"  CapRadius="2" VerticalAlignment="Top" HorizontalAlignment="Left"  Direction="2"  LiquidColor="Green" Margin="184,181,0,0" RenderTransformOrigin="0.72,1.078"/>
+                    <myCtl:Pinpeline Height="5" Width="29"  CapRadius="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="208,140,0,0" Direction="2" LiquidColor="Green" RenderTransformOrigin="0.5,0.5">
+                        <myCtl:Pinpeline.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-0.241"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+                    <myCtl:Pinpeline Height="5" Width="92" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="196,0,0,26" Direction="2" LiquidColor="Green">
+
+                        <myCtl:Pinpeline.RenderTransform>
+                            <RotateTransform Angle="-66"/>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+
+                    <myCtl:Pinpeline Height="5" Width="35"  CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Direction="1"  LiquidColor="Orange" Margin="184,0,0,126"/>
+                    <myCtl:Pinpeline Height="5" Width="30"  CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="206,0,0,159" Direction="1" LiquidColor="Orange"/>
+                    <myCtl:Pinpeline Panel.ZIndex="3" Height="5" Width="311"  CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="229,0,0,145" Direction="1" LiquidColor="Orange"/>
+                    <myCtl:Pinpeline Height="5" Width="81" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="200,0,0,85" Direction="1" LiquidColor="Orange">
+                        <myCtl:Pinpeline.RenderTransform>
+                            <RotateTransform Angle="-66"/>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+                    <myCtl:Pinpeline Height="5" Width="43" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="162,0,0,89" Direction="1" LiquidColor="Orange"/>
+
+                    <myCtl:Pinpeline Height="5" Width="46" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="221,0,0,76" Direction="2" LiquidColor="Green"/>
+
+
+                    <myCtl:Pinpeline Height="5" Width="41" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="282,0,0,126" Direction="2" LiquidColor="Green"/>
+                    <myCtl:Pinpeline Height="5" Width="41" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="249,0,0,40" Direction="2" LiquidColor="Green" Loaded="Pinpeline_Loaded"/>
+                    <myCtl:Pinpeline Height="5" Width="41" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="267,0,0,83" Direction="2" LiquidColor="Green"/>
+
+                    <myCtl:Pinpeline Height="5" Width="95" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="248,0,0,37" Direction="2" LiquidColor="Green">
+
+                        <myCtl:Pinpeline.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0.99999999999999989"/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-69.055"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+
+
+                    <myCtl:Pinpeline Panel.ZIndex="3" Height="5" Width="94" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="335,0,0,64" Direction="2" LiquidColor="Green">
+
+                        <myCtl:Pinpeline.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0.99999999999999989"/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-73.589"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+
+                    <myCtl:Pinpeline Panel.ZIndex="2" Height="5" Width="10" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="298,0,0,56" Direction="2" LiquidColor="Green">
+
+                        <myCtl:Pinpeline.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0.99999999999999999"/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-92.325"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+                    <myCtl:Pinpeline Panel.ZIndex="2" Height="5" Width="10" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="324,0,0,141" Direction="2" LiquidColor="Green">
+
+                        <myCtl:Pinpeline.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0.99999999999999999"/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-92.325"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+                    <myCtl:Pinpeline Panel.ZIndex="2" Height="5" Width="10" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="312,0,0,98" Direction="2" LiquidColor="Green" Loaded="Pinpeline_Loaded_1">
+
+                        <myCtl:Pinpeline.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0.99999999999999999"/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-92.325"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+                    <myCtl:Pinpeline Panel.ZIndex="1" Height="5" Width="20" CapRadius="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="472,119,0,0" Direction="2" LiquidColor="Green">
+
+                        <myCtl:Pinpeline.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0.99999999999999999"/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-92.325"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+                    <myCtl:Pinpeline Panel.ZIndex="1" Height="5" Width="30" CapRadius="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="553,127,0,0" Direction="2" LiquidColor="Green">
+
+                        <myCtl:Pinpeline.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0.99999999999999999"/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-90.864"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+                    <myCtl:Pinpeline Panel.ZIndex="1" Height="5" Width="20" CapRadius="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="461,126,0,0" Direction="1" LiquidColor="Orange">
+
+                        <myCtl:Pinpeline.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0.99999999999999999"/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-92.325"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+                    <myCtl:Pinpeline Panel.ZIndex="1" Height="6" Width="20" CapRadius="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="535,126,0,0" Direction="1" LiquidColor="Orange">
+
+                        <myCtl:Pinpeline.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0.99999999999999999"/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-91.491"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </myCtl:Pinpeline.RenderTransform>
+                    </myCtl:Pinpeline>
+
+                    <myCtl:Pinpeline Panel.ZIndex="3" Height="5" Width="41" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="298,0,0,68" Direction="2" LiquidColor="Green"/>
+                    <myCtl:Pinpeline Panel.ZIndex="2" Height="5" Width="41" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="323,0,0,154" Direction="2" LiquidColor="Green"/>
+                    <myCtl:Pinpeline Panel.ZIndex="3" Height="5" Width="196" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="361,0,0,154" Direction="2" LiquidColor="Green"/>
+                    <myCtl:Pinpeline Panel.ZIndex="2" Height="5" Width="41" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="312,0,0,111" Direction="2" LiquidColor="Green"/>
+                </Grid>
+            </Viewbox>
+        </Canvas>
+        <!-- 左侧设备详情-->
+        <Grid Grid.Column="0"
+              Visibility="{Binding IsShowdatil,Converter={StaticResource BoolToVisvilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding CurrentDevice.DeviceName}" Foreground="White" FontSize="14" Margin="0,15"/>
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding CurrentDevice.MonitorValueList}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding ValueName,StringFormat=\{0\}:}" Foreground="#99FFFFFF" VerticalAlignment="Center"/>
+                            <lvc:CartesianChart Grid.Column="1" MinHeight="30" DataTooltip="{x:Null}">
+                                <lvc:CartesianChart.AxisX>
+                                    <lvc:Axis ShowLabels="False"/>
+                                </lvc:CartesianChart.AxisX>
+                                <lvc:CartesianChart.AxisY>
+                                    <lvc:Axis ShowLabels="False"/>
+                                </lvc:CartesianChart.AxisY>
+                                <lvc:CartesianChart.Series>
+                                    <lvc:LineSeries Fill="Transparent" Values="{Binding Values}" PointGeometrySize="0" StrokeThickness="0.5">
+                                        <lvc:LineSeries.Stroke>
+                                            <LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+                                                <GradientStop Color="Orange" Offset="0.5"/>
+                                                <GradientStop Color="#00FFFFFF" Offset="0"/>
+                                                <GradientStop Color="#FFFFE2AE" Offset="0.1"/>
+                                            </LinearGradientBrush>
+                                        </lvc:LineSeries.Stroke>
+                                    </lvc:LineSeries>
+                                </lvc:CartesianChart.Series>
+                            </lvc:CartesianChart>
+                            <TextBlock Text="{Binding CurrentValue}" Grid.Column="2" Foreground="#99FFFFFF" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Unit}" Grid.Column="3" Foreground="#99FFFFFF" VerticalAlignment="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <!--开/停机-->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Height="40">
+                <TextBlock Text="实时状态：" Foreground="#99FFFFFF" VerticalAlignment="Center"/>
+                <ToggleButton IsChecked="{Binding CurrentDevice.IsRuning}" Template="{StaticResource StateButtonTemplate}"/>
+            </StackPanel>
+            <!--报警灯-->
+
+            <ToggleButton  Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="False" IsChecked="{Binding CurrentDevice.IsWarning}" Template="{StaticResource WarningButtonTemplate}"/>
+
+            <ItemsControl Grid.Row="3" ItemsSource="{Binding CurrentDevice.WarningMessageList}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Message}" Foreground="#CCFF4400" TextWrapping="Wrap" LineHeight="22">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="White" ShadowDepth="0" Direction="0" Opacity="0.7" BlurRadius="1"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </Grid>
+
+        <Grid   Grid.Row="0" Grid.Column="2" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock  Text="系统总览" Foreground="White" HorizontalAlignment="Right" Margin="0,20,20,20" FontSize="14"/>
+
+            <UniformGrid Grid.Row="1" Rows="1">
+                <StackPanel>
+                    <TextBlock Text="监控值" HorizontalAlignment="Center" Foreground="#99FFFFFF"/>
+                    <myCtl:CricularProgressBar1 Height="60" Width="60" Value="100" Margin="0,15" ForeColor="#20c9b4"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="监控值" HorizontalAlignment="Center"  Foreground="#99FFFFFF"/>
+                    <myCtl:CricularProgressBar1 Height="60" Width="60" Value="50" Margin="0,15"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="监控值" HorizontalAlignment="Center" Foreground="#99FFFFFF"/>
+                    <myCtl:CricularProgressBar1 Height="60" Width="60" Value="30" ForeColor="#38baec" Margin="0,15"/>
+                </StackPanel>
+            </UniformGrid>
+
+            <TextBlock Text="实时日记" Foreground="#44FFFFFF" Grid.Row="2" Margin="5,10"/>
+            <TextBlock  HorizontalAlignment="Right" Grid.Row="2"  VerticalAlignment="Center" FontSize="11" Margin="5">
+                <!-- 超链接-->
+                <Hyperlink Foreground="#66DFFDFF">详情</Hyperlink>
+            </TextBlock>
+
+            <!-- 集合-->
+            <ItemsControl Grid.Row="3" ItemsSource="{Binding Source={StaticResource smVM},Path=LogList}" AlternationCount="2">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Border Background="#66DFFDFF"  Visibility="Collapsed" Name="back" CornerRadius="14"/>
+                            <Grid TextBlock.Foreground="White" TextBlock.FontSize="10" Height="28" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding RowNumber,StringFormat=\{0:00\}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding DeviceName}" VerticalAlignment="Center" Grid.Column="1"/>
+                                <TextBlock Text="{Binding LogInfo}" VerticalAlignment="Center" Grid.Column="2"/>
+                                <Border Grid.Column="3" Height="26" Name="type_back" Margin="0,1,1,1" CornerRadius="13" Width="50">
+                                    <TextBlock Text="{Binding LogType}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="3"/>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                        <DataTemplate.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                <Setter Property="Visibility" Value="Visible" TargetName="back"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding LogType}" Value="1">
+                                <Setter Property="Background" Value="#CD5C5C" TargetName="type_back"/>
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </Grid>
+</UserControl>
