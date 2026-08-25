@@ -78,7 +78,7 @@ namespace MonitoringSystem.Base
                 rtu.ResponseData = new Action<int, List<byte>>(ParsingData);
                 if (rtu.Connection())
                 {
-                    successAction();
+                    
 
                     int startAddr = 0;
                     while (isRunning)
