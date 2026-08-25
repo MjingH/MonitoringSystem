@@ -18,6 +18,8 @@ namespace MonitoringSystem.Base
 
         public static SerialInfo SerialInfo { get; set; }
 
+        public static List<UserModel> UserList { get; set; }
+
         static bool isRunning = true;
         static Task mainTask = null;
         static RTU rtu;
@@ -37,6 +39,16 @@ namespace MonitoringSystem.Base
                 {
                     faultAction(si.Message);
                     return;
+                }
+                // 获取用户信息
+                var user = bll.InitUsers();
+                if (user.State)
+                {
+                    UserList =  user.Data;
+                }
+                else
+                {
+                    faultAction(user.Message); return;
                 }
                 // 获取存储区信息
                 var sa = bll.InitStorageArea();

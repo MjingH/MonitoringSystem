@@ -99,7 +99,9 @@ namespace MonitoringSystem.View
                 this.mainView.SetValue(Canvas.TopProperty,top +  currentPoint.Y-_downPoint.Y);
 
                 e.Handled = true;
+
             }
         }
+        
     }
 }

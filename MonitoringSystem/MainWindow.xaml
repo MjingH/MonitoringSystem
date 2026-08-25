@@ -114,7 +114,7 @@
                 </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20,15">
-                <TextBlock Text="zhansgan" Foreground="White" VerticalAlignment="Center" Margin="10,0"/>
+                <TextBlock Text="{Binding LoginViewModel.user.Data[0].UserName}" Foreground="White" VerticalAlignment="Center" Margin="10,0"/>
                 <Border Width="30" Height="30" CornerRadius="15" BorderThickness="1" BorderBrush="White">
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="5" ShadowDepth="0" Direction="0" Opacity="0" Color="White"/>
@@ -129,6 +129,6 @@
                 -->
             </StackPanel>
         </Grid>
-        <ContentControl x:Name="MyContent" Grid.Row="1" Content="{Binding MainContent}"/>
+        <ContentControl x:Name="MyContent" Grid.Row="1" Content="{Binding MainContent}" Margin="-2,0,2,0"/>
     </Grid>
 </Window>

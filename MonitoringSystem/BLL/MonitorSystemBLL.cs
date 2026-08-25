@@ -14,7 +14,7 @@ using System.Windows;
 
 namespace MonitoringSystem.BLL
 {
-    internal class MonitorSystemBLL
+    public class MonitorSystemBLL
     {
         // 创建全局DataAccess对象
         DataAccess da = new DataAccess();
@@ -44,6 +44,69 @@ namespace MonitoringSystem.BLL
             return result;
         }
 
+        // 解析数据库表登录User数据信息
+        public DataResult<List<UserModel>> LoginUser(string username,string password)
+        {
+            DataResult<List<UserModel>> result = new DataResult<List<UserModel>>();
+
+            try
+            {
+
+                DataResult<DataTable> user = da.CheckUserInfo(username,password);
+                result.Message = user.Message;
+                if (user.Data == null) return result;
+                var values = (from q in user.Data.AsEnumerable()
+                              select new UserModel
+                              {
+                                  Id = q.Field<int>("id"),
+                                  Status = q.Field<bool>("status"),
+                                  UserName = q.Field<string>("user_name"),
+                                  Sex = q.Field<bool>("sex"),
+                                  Password = q.Field<string>("password"),
+                                  CreateTime = q.Field<string>("create_time"),
+                                  UpdateTime = q.Field<string>("updata_time")
+                              }).ToList();
+                result.State = user.State;
+                result.Data = values;
+            }
+            catch (Exception ex)
+            {
+
+                result.Message=ex.Message;
+            }
+            return result;
+        }
+        // 解析数据库表Users数据信息
+        public DataResult<List<UserModel>> InitUsers()
+        {
+            DataResult<List<UserModel>> result = new DataResult<List<UserModel>>();
+
+            try
+            {
+                var user = da.GetUsers();
+
+                var values = (from q in user.AsEnumerable()
+                              select new UserModel
+                              {
+                                  Id = q.Field<int>("id"),
+                                  Status = q.Field<bool>("status"),
+                                  UserName = q.Field<string>("user_name"),
+                                  Sex = q.Field<bool>("sex"),
+                                  Password = q.Field<string>("password"),
+                                  CreateTime = q.Field<string>("create_time"),
+                                  UpdateTime = q.Field<string>("updata_time")
+                              }).ToList();
+                result.State = true;
+                result.Data = values;
+            }
+            catch (Exception ex)
+            {
+
+                result.Message=ex.Message;
+            }
+            return result;
+        }
+ 
         // 解析数据库表StorageArea数据信息
         public DataResult<List<StorageModel>> InitStorageArea()
         {

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.37203.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitoringSystem", "MonitoringSystem\MonitoringSystem.csproj", "{B4E7917F-F8B1-4A6A-A80E-071C02B0B371}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Communication", "Communication1\Communication.csproj", "{9448CF97-470C-4DE4-800B-2B8ADC44471D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Communication2", "Communication1\Communication2.csproj", "{9448CF97-470C-4DE4-800B-2B8ADC44471D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controls", "WpfControlLibrary1\Controls.csproj", "{8C8ACFA5-0FBA-4944-945D-0303B3AC3720}"
 EndProject

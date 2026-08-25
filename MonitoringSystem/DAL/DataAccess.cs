@@ -1,4 +1,7 @@
-﻿using MySqlConnector;
+﻿using MonitoringSystem.Base;
+using MonitoringSystem.BLL;
+using MonitoringSystem.Model;
+using MySqlConnector;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -11,18 +14,18 @@ namespace MonitoringSystem.DAL
 {
     internal class DataAccess
     {
-        String dbCofig = ConfigurationManager.ConnectionStrings["db_config"].ToString();
-        MySqlConnection conn;
-        MySqlCommand cmd;
-        MySqlDataAdapter adapter;
-        MySqlTransaction trans;
+        String dbConfig = ConfigurationManager.ConnectionStrings["db_config"].ToString();
+        MySqlConnection conn; //表示与 MySQL 数据库服务器之间的一个物理连接。它是所有数据库操作的第一步，负责打开、关闭连接，并管理连接状态
+        MySqlCommand cmd;  // 表示要对数据库执行的一条 SQL 语句或一个存储过程。它负责发送命令并接收执行结果。
+        MySqlDataAdapter adapter; // 充当 DataSet 和数据库之间的桥梁，用于填充数据（Fill）和更新数据（Update）。它本身不管理连接，但内部使用命令对象执行操作
+        MySqlTransaction trans; // 表示一个数据库事务，用于将多个数据库操作组合成一个原子工作单元，保证这些操作要么全部成功提交，要么全部回滚。
 
         // 销毁数据
         private void Dispose()
         {
             if (conn != null)
             {
-                conn.Dispose(); adapter = null;
+                conn.Dispose(); conn = null;
             }
             if (cmd != null)
             {
@@ -43,18 +46,11 @@ namespace MonitoringSystem.DAL
             DataTable dt = new DataTable();
             try
             {
-                conn = new MySqlConnection(dbCofig);
+                conn = new MySqlConnection(dbConfig);
                 conn.Open();
-
-                // --- 添加诊断输出 ---
-                Console.WriteLine("连接状态: " + conn.State);
-                Console.WriteLine("服务器版本: " + conn.ServerVersion);
-                Console.WriteLine("当前数据库: " + conn.Database);
-                // --------------------
 
                 adapter = new MySqlDataAdapter(sql, conn);
                 adapter.Fill(dt);
-                Console.WriteLine("查询返回行数1: " + dt.Rows.Count);
             }
             catch (Exception ex)
             {
@@ -65,12 +61,115 @@ namespace MonitoringSystem.DAL
             {
                 this.Dispose();
             }
-            DataRow row = dt.Rows[0];
-            foreach (var item in row.ItemArray)
-                Console.Write(item + "\t");
-            Console.WriteLine();
+
             return dt;
         }
+/*
+        private bool DBConnection()
+        {
+            if (conn == null)
+            {
+                conn = new MySqlConnection(dbConfig);
+            }
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("数据库连接异常");
+                return false;
+
+            }
+            return true;
+        }*/
+
+        public DataResult<DataTable> CheckUserInfo(string username, string password)
+        {
+            DataResult<DataTable> result = new DataResult<DataTable>();
+            result.State = false;
+            string strsql = "select * from users where user_name=@user_name and password = @pwd";
+            DataTable dt = new DataTable();
+
+            using (MySqlConnection conn = new MySqlConnection(dbConfig))
+            using (MySqlCommand cmd = new MySqlCommand(strsql, conn))
+            using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+            {
+                // 显式指定参数类型
+                cmd.Parameters.Add(new MySqlParameter("@user_name", MySqlDbType.VarChar, 50) { Value = username });
+                var m = MD5Provider.GetMD5String(password + "@" + username);
+                cmd.Parameters.Add(new MySqlParameter("@pwd", MySqlDbType.VarChar, 100) { Value = m });
+
+                conn.Open();
+                adapter.Fill(dt);
+
+                // 检查结果
+                if (dt.Rows.Count == 0)
+                {
+                    result.Message = "用户名或密码错误";
+                    return result;
+                }
+
+
+                if (!dt.Rows[0].Field<bool>("status"))
+                {
+                    result.Message = "你没有权限使用平台";
+                    return result;
+                }
+                result.State = true;
+                result.Data = dt;
+                return result;
+            } // 所有 using 结束后，连接、命令、适配器自动关闭和释放
+        }
+
+        /*  public DataTable CheckUserInfo(string username, string password)
+          {
+              try
+              {
+                  if (DBConnection())
+                  {
+                      // 1
+                      string strsql = "select * from users where user_name=@user_name and password = @pwd";
+                      *//*adapter = new MySqlDataAdapter();
+                      cmd = new MySqlCommand(strsql, conn);
+                      cmd.Parameters.AddWithValue("@user_name",username); // MySQL 要自己去猜 username 和 password 是什么类型
+                      cmd.Parameters.AddWithValue("@pwd",password);
+                      adapter.SelectCommand = cmd;*//*
+                      // 2
+                      adapter = new MySqlDataAdapter(strsql, conn);
+                      adapter.SelectCommand.Parameters.Add(new MySqlParameter("@user_name", MySqlDbType.VarChar) { Value = username });
+                      adapter.SelectCommand.Parameters.Add(new MySqlParameter("@pwd", MySqlDbType.VarChar) { Value = password });
+
+                      DataTable dt = new DataTable();
+
+                      int count = adapter.Fill(dt);
+
+                      if (count < 0)
+                      {
+                          throw new Exception("用户名或密码不正确");
+                      }
+                      var dr = dt.Rows[0];
+                      if (!(dr.Field<bool>("status")))
+                      {
+                          throw new Exception("你没有权限使用平台");
+                      }
+                      return dt;
+                  }
+              }
+              catch (Exception ex)
+              {
+
+                  throw ex;
+
+              }
+              finally
+              {
+                  this.Dispose();
+              }
+
+              return null;
+
+          }*/
 
         public DataTable GetStorageArea()
         {
@@ -85,13 +184,19 @@ namespace MonitoringSystem.DAL
         public DataTable GetMonitorValues()
         {
             String strsql = "select * from monitor_values";
-            
-            return this.GetDatas(strsql);   
+
+            return this.GetDatas(strsql);
         }
         public DataTable GetDevices()
         {
             String strsql = "select * from devices";
-            return this.GetDatas(strsql);   
+            return this.GetDatas(strsql);
+        }
+
+        public DataTable GetUsers()
+        {
+            String strsql = "select * from users";
+            return this.GetDatas(strsql);
         }
     }
 }

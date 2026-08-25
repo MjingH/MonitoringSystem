@@ -323,7 +323,7 @@
             <!--开/停机-->
             <StackPanel Grid.Row="2" Orientation="Horizontal" Height="40">
                 <TextBlock Text="实时状态：" Foreground="#99FFFFFF" VerticalAlignment="Center"/>
-                <ToggleButton IsChecked="{Binding CurrentDevice.IsRuning}" Template="{StaticResource StateButtonTemplate}"/>
+                <ToggleButton IsChecked="{Binding CurrentDevice.IsRuning}" Template="{StaticResource StateButtonTemplate}" Style="{x:Null}"/>
             </StackPanel>
             <!--报警灯-->
 

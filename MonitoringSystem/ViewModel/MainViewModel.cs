@@ -1,4 +1,5 @@
 ﻿using MonitoringSystem.Base;
+using MonitoringSystem.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,7 +16,13 @@ namespace MonitoringSystem.ViewModel
 {
     public class MainViewModel : NotifyPropertyBase
     {
-		private UIElement _mainContent;
+
+        public UserModel  UserModel { get; set; }
+
+        public LoginViewModel LoginViewModel { get; set; }
+
+
+        private UIElement _mainContent;
 
 		public UIElement MainContent
 		{
@@ -30,6 +37,10 @@ namespace MonitoringSystem.ViewModel
 
         public MainViewModel()
         {
+            //UserModel = new UserModel();
+
+            LoginViewModel = new LoginViewModel();
+
             TabChangedCommand = new CommandBase(OnTabChaged);
             OnTabChaged("MonitoringSystem.View.SystemMonitor");
             // 初始化默认显示内容（与第一个 RadioButton 的 CommandParameter 一致）

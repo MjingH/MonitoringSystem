@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using MonitoringSystem.View;
 
 namespace MonitoringSystem
 {
@@ -23,7 +24,12 @@ namespace MonitoringSystem
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        new MainWindow().Show();
+                        //if (new LoginSystem().ShowDialog() == true)
+                       // {
+                            new MainWindow().ShowDialog();
+                        //}
+                        Application.Current.Shutdown();
+                        
                     });
                 },
                 (msg) =>

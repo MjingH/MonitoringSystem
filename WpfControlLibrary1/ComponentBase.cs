@@ -76,6 +76,7 @@ namespace WpfControlLibrary1
         private static void OnRunningStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             bool state = (bool)e.NewValue;
+            
             VisualStateManager.GoToState(d as ComponentBase, state ? "RunState" : "StopState", false);
         }
 
