@@ -148,7 +148,7 @@ namespace MonitoringSystem.Base
                     switch (item.DataType)
                     {
                         case "Float":
-                            startByte = item.StartAddress  + 3;
+                            startByte = 3 + item.StartAddress * 2;  // 跳过帧头（3字节）后，按寄存器地址*2定位
                             if (startByte < start_addr + byteList.Count)
                             {
                                 res = new byte[4] { byteList[startByte], byteList[startByte + 1],

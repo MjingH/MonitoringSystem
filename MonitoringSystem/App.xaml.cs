@@ -22,15 +22,16 @@ namespace MonitoringSystem
             GlobalMonitor.Start(
                 () =>
                 {
-                    Application.Current.Dispatcher.Invoke(() =>
+                    // 使用 BeginInvoke 异步执行 UI 操作，不阻塞后台线程
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        //if (new LoginSystem().ShowDialog() == true)
-                       // {
-                            new MainWindow().ShowDialog();
-                        //}
+                        // 如果存在登录窗口，可在此显示
+                        // if (new LoginSystem().ShowDialog() == true)
+                        // {
+                        new MainWindow().ShowDialog();
+                        // }
                         Application.Current.Shutdown();
-                        
-                    });
+                    }));
                 },
                 (msg) =>
                 {
