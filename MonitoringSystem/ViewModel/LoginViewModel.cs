@@ -21,20 +21,11 @@ namespace MonitoringSystem.ViewModel
 {
     public class LoginViewModel : NotifyPropertyBase
     {
-        //DataResult<List<UserModel>> user = new DataResult<List<UserModel>>();
 
-        //public DataResult<List<UserModel>> user { get; set; }
 
-        private DataResult<List<UserModel>> _user;
+        public DataResult<List<UserModel>> user { get; set; }
 
-        public DataResult<List<UserModel>> user
-        {
-            get { return _user; }
-            set { _user = value;
-                Console.WriteLine(value.Data[0].UserName);
-                RaisePropertyChanged(); }
-        }
-
+  
 
         public CommandBase1 CloseWindowCommand { get; set; }
 
@@ -62,9 +53,14 @@ namespace MonitoringSystem.ViewModel
 
         public MonitorSystemBLL monitorSystemBLL { get; set; }
 
+        private string _currtentUsername;
+
+      
+
+
 
         #region 验证码实现逻辑
-        
+
         // 用于生成随机验证码的字符集（数字 + 大写字母，排除易混淆字符）
         private const string CharSet = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 
@@ -335,6 +331,7 @@ namespace MonitoringSystem.ViewModel
                      
                      monitorSystemBLL = new MonitorSystemBLL();
                       user = monitorSystemBLL.LoginUser(UserModel.UserName, UserModel.Password);
+                     
                      Console.WriteLine(user.Data[0].UserName);
                      if (!user.State)
                      {
@@ -347,6 +344,7 @@ namespace MonitoringSystem.ViewModel
                      {
                          Application.Current.Dispatcher.Invoke(new Action(() =>
                          {
+                             GlobalMonitor.CurrentUsername = UserModel.UserName; // 保存到全局
                              (o as LoginSystem).DialogResult = true;
                          }));
                      }

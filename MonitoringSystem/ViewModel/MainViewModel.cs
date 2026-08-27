@@ -17,9 +17,9 @@ namespace MonitoringSystem.ViewModel
     public class MainViewModel : NotifyPropertyBase
     {
 
-        public UserModel  UserModel { get; set; }
-
         public LoginViewModel LoginViewModel { get; set; }
+
+     
 
 
         private UIElement _mainContent;
@@ -31,15 +31,25 @@ namespace MonitoringSystem.ViewModel
 				Set(ref _mainContent, value);
 			}
         }
-		
 
-		public CommandBase TabChangedCommand {  get; set; }
+
+        private string _currentUsername;
+        public string CurrentUsername
+        {
+            get => _currentUsername;
+            set { _currentUsername = value; RaisePropertyChanged(); }
+        }
+
+
+        public CommandBase TabChangedCommand {  get; set; }
 
         public MainViewModel()
         {
+            CurrentUsername = GlobalMonitor.CurrentUsername;
+
             //UserModel = new UserModel();
 
-            LoginViewModel = new LoginViewModel();
+            //LoginViewModel = new LoginViewModel();
 
             TabChangedCommand = new CommandBase(OnTabChaged);
             OnTabChaged("MonitoringSystem.View.SystemMonitor");

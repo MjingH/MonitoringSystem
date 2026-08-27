@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:MonitoringSystem.ViewModel"
+        xmlns:base="clr-namespace:MonitoringSystem.Base"
         xmlns:local="clr-namespace:MonitoringSystem" xmlns:viewmodel="clr-namespace:MonitoringSystem.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
         mc:Ignorable="d"
         FontFamily="Microsoft YaHei" FontWeight="ExtraLight"
@@ -10,8 +12,11 @@
         WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen"
         MouseMove="Window_MouseMove">
     <Window.Resources>
+        
         <ResourceDictionary>
+            <vm:LoginViewModel x:Key="LoginViewModel"/>
             <ResourceDictionary.MergedDictionaries>
+                
                 <ResourceDictionary Source="/Assets/Styles/WindowControlButtonStyle.xaml"/>
                 <ResourceDictionary>
                 <Style TargetType="RadioButton" x:Key="NavTabButtonStyle">
@@ -47,6 +52,49 @@
                         </Trigger>
                     </Style.Triggers>
                 </Style>
+                    
+                    
+                    <!--菜单栏-->
+                    <Style TargetType="MenuItem" x:Key="MenuItemStyle">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="MenuItem">
+                                    <Border x:Name="border"
+                                            Background="{TemplateBinding Background}"
+                                            Width="{TemplateBinding Width}"
+                                            Height="{TemplateBinding Height}"
+                                            BorderThickness="0">
+                                        <Grid>
+                                        <ContentPresenter ContentSource="Header"
+                                                          HorizontalAlignment="Left"
+                                                          VerticalAlignment="Center"
+                                                          TextBlock.Foreground="{TemplateBinding Foreground}"
+                                                          TextBlock.FontFamily="{TemplateBinding FontFamily}"
+                                                          TextBlock.FontSize="{TemplateBinding FontSize}"/>
+                                            <ContentPresenter ContentSource="Icon"
+                                                              HorizontalAlignment="Left"
+                                                              VerticalAlignment="Center"
+                                                              Height="16"
+                                                              Width="16"
+                                                              Margin="30,0,0,0"/>
+                                             <Popup x:Name="popup"
+                                                    AllowsTransparency="True"
+                                                    IsOpen="{Binding IsSubmenuOpen,RelativeSource={RelativeSource TemplatedParent}}"
+                                                    Placement="Left" >
+
+                                                <Border  Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding Background}">
+                                                    <ItemsPresenter x:Name="ItemsPresenter"/>
+                                                </Border>
+
+
+                                            </Popup>
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter> 
+                    </Style>
+                    
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -113,20 +161,67 @@
                     <Path Data="M0,0 L12,12 M0,12 L12,0" Stroke="White" StrokeThickness="2" Width="12" Height="12" Stretch="Uniform"/>
                 </Button>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20,15">
-                <TextBlock Text="{Binding LoginViewModel.user.Data[0].UserName}" Foreground="White" VerticalAlignment="Center" Margin="10,0"/>
+
+            <!--<Menu Background="Transparent" VerticalAlignment="Bottom" Width="100" Height="30" HorizontalAlignment="Right" Margin="20,15">
+                <MenuItem Style="{StaticResource MenuItemStyle}">
+                    <MenuItem.Header>
+                        <TextBlock Text="{Binding CurrentUsername}" Foreground="White" VerticalAlignment="Center" Margin="10,0"/>
+                    </MenuItem.Header>
+                    <MenuItem.Icon>
+                        <Border Width="30" Height="30" CornerRadius="15" BorderThickness="1" BorderBrush="White">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="5" ShadowDepth="0" Direction="0" Opacity="0" Color="White"/>
+                            </Border.Effect>
+                            <Border.Background>
+                                <ImageBrush ImageSource="/Assets/Image/用户.png"/>
+                            </Border.Background>
+                        </Border>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </Menu>-->
+            
+            <StackPanel Panel.ZIndex="3" 
+                Orientation="Horizontal" 
+                VerticalAlignment="Bottom" 
+                HorizontalAlignment="Right" 
+                Margin="20,15"
+                        x:Name="UserInfoPanel"
+                MouseLeftButtonDown="StackPanel_MouseLeftButtonDown"
+                Cursor="Hand">
+                <TextBlock Text="{Binding CurrentUsername}" Foreground="White" VerticalAlignment="Center" Margin="10,0"/>
                 <Border Width="30" Height="30" CornerRadius="15" BorderThickness="1" BorderBrush="White">
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="5" ShadowDepth="0" Direction="0" Opacity="0" Color="White"/>
                     </Border.Effect>
                     <Border.Background>
-                        <ImageBrush ImageSource="/Assets/Image/报表管理.png"/>
+                        <ImageBrush ImageSource="/Assets/Image/用户.png"/>
                     </Border.Background>
                 </Border>
-                <!--  <Border Width="30" Height="30" CornerRadius="15" BorderThickness="1" BorderBrush="White">
+
+                <!-- 弹出下拉菜单（Popup） -->
+                <Popup x:Name="UserMenuPopup" 
+                        PlacementTarget="{Binding ElementName=UserInfoPanel}" 
+                        Placement="Bottom"
+                         StaysOpen="False"
+                         AllowsTransparency="True"
+                         PopupAnimation="Slide">
+                 <Border Background="#2A2A2A" 
+                        BorderBrush="#444" 
+                        BorderThickness="1" 
+                        CornerRadius="4"
+                        Padding="5">
+                        <StackPanel>
+                            <Button Content="个人中心" />
+                            <Button Content="设置" />
+                            <Separator Background="#444" Margin="0,5"/>
+                            <Button Content="退出登录" 
+                                    Command="{Binding LogoutCommand}"/>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+                <!--<Border Width="30" Height="30" CornerRadius="15" BorderThickness="1" BorderBrush="White">
                 <Image Source="/Assets/Image/报表管理.png"/>
-                </Border>
-                -->
+                </Border>-->
             </StackPanel>
         </Grid>
         <ContentControl x:Name="MyContent" Grid.Row="1" Content="{Binding MainContent}" Margin="-2,0,2,0"/>

@@ -1,15 +1,16 @@
 ﻿using Communication1;
+using MonitoringSystem.Base;
+using MonitoringSystem.DAL;
+using MonitoringSystem.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Configuration;
+using System.Data;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using System.Configuration;
-using System.IO.Ports;
-using MonitoringSystem.Model;
-using MonitoringSystem.DAL;
-using System.Data;
 using System.Windows;
 
 namespace MonitoringSystem.BLL
@@ -212,12 +213,41 @@ namespace MonitoringSystem.BLL
                                 if (state != Base.MonitorValueState.OK)
                                 {
                                     model.IsWarning = true;
+                                    
+                                   
+
+
+
+                                    // 添加报警日志
                                     model.WarningMessageList.Add(new WarningMessageModel
                                     {
                                         ValueId = value_id,
                                         Message = msg
                                     });
+
+                                    // 给logType赋值
+                                    foreach (var lt in GlobalMonitor.LogList.Where(m => m.RowNumber == model.DeviceId))
+                                    {
+                                        lt.LogType = Base.LogType.Warn;
+                                        lt.Message = msg;
+
+                                        GlobalMonitor.AllLogList.Insert(0,new LogModel
+                                        {
+                                            RowNumber = lt.RowNumber,
+                                            DeviceName = lt.DeviceName,
+                                            LogInfo = lt.LogInfo,
+                                            LogType = lt.LogType,
+                                            Message = msg
+                                            //WarningMessageList  = new ObservableCollection<WarningMessageModel>
+                                            //{
+
+                                            //}
+                                            //WarningMessageList = model.WarningMessageList
+                                        });
+                                    }
+                                    
                                 }
+                                
                                 var ss = model.WarningMessageList.Count > 0;
                                 if (model.IsWarning != ss)
                                 {

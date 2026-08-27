@@ -13,6 +13,8 @@ namespace MonitoringSystem.Model
     {
         public Action<MonitorValueState, string,string> ValueStorageChanged;
 
+        //  public Action<object> LogChanged;
+
         public string ValueId { get; set; }
         public string ValueName { get; set; }
         public string StorageAreaId { get; set; }
@@ -24,6 +26,8 @@ namespace MonitoringSystem.Model
         public double HighAlarm { get; set; }
         public double HiHiAlarm  { get; set; }
         public int DeviceId { get; set; }
+        public string ValueDesc { get; set; }
+
 
         public string Unit { get; set; }
 
@@ -35,6 +39,11 @@ namespace MonitoringSystem.Model
             get { return _currentValue; }
             set { _currentValue = value;
                 MonitorValueState state = MonitorValueState.OK;
+                // 给logType赋值
+                foreach (var lt in GlobalMonitor.LogList.Where(m => m.RowNumber == DeviceId))
+                {
+                    lt.LogType = Base.LogType.Info;
+                }
                 if (IsAlarm)
                 {
                     string msg = ValueDesc;
@@ -47,8 +56,7 @@ namespace MonitoringSystem.Model
                     else if (value > HighAlarm)
                     { msg += "过高"; state = MonitorValueState.High; } 
                     ValueStorageChanged(state, msg + "。当前值:" + value.ToString(),ValueId);
-
-                 
+                    
                 }
                 RaisePropertyChanged();
                 Values.Add(new ObservableValue(value));
@@ -57,7 +65,6 @@ namespace MonitoringSystem.Model
         }
 
         public ChartValues<ObservableValue> Values { get; set; } = new ChartValues<ObservableValue>();  
-        public String ValueDesc { get; set; }
-
+      
     }
 }

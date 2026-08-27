@@ -1,4 +1,6 @@
 ﻿using MonitoringSystem.Base;
+using MonitoringSystem.Model;
+using MonitoringSystem.View;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -6,7 +8,6 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using MonitoringSystem.View;
 
 namespace MonitoringSystem
 {
@@ -26,10 +27,11 @@ namespace MonitoringSystem
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         // 如果存在登录窗口，可在此显示
-                        // if (new LoginSystem().ShowDialog() == true)
+                        //if (new LoginSystem().ShowDialog() == true)
                         // {
+
                         new MainWindow().ShowDialog();
-                        // }
+                       //  }
                         Application.Current.Shutdown();
                     }));
                 },

@@ -4,6 +4,8 @@ using MonitoringSystem.BLL;
 using MonitoringSystem.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +17,14 @@ namespace MonitoringSystem.Base
         public static List<StorageModel> StorageList { get; set; }
 
         public static List<DeviceModel> DeviceList { get; set; }
+        public static ObservableCollection<LogModel> LogList { get; set; } = new ObservableCollection<LogModel>();
+        public static ObservableCollection<LogModel> AllLogList { get; set; } = new ObservableCollection<LogModel>();
+
+
+
+        public static string CurrentUsername { get; set; }
+
+        
 
         public static SerialInfo SerialInfo { get; set; }
 
@@ -40,6 +50,8 @@ namespace MonitoringSystem.Base
                     faultAction(si.Message);
                     return;
                 }
+                
+                
                 // 获取用户信息
                 var user = bll.InitUsers();
                 if (user.State)
@@ -66,6 +78,27 @@ namespace MonitoringSystem.Base
                 if (dr.State)
                 {
                     DeviceList = dr.Data;
+                    if (DeviceList != null)
+                    {
+                        foreach (var d in DeviceList) {
+                            
+                        LogList.Add(new LogModel
+                        {
+                            RowNumber = d.DeviceId,
+                            DeviceName = d.DeviceName,
+                            LogInfo = d.IsRuning ? "已启动":"已关闭" ,
+                            LogType = Base.LogType.Info,
+                        });
+
+                            // 浅绑定
+                            AllLogList = new ObservableCollection<LogModel>(LogList);
+
+                            // ★核心：订阅当前设备的运行状态变更事件
+                            d.RunningStateChanged += OnDeviceRunningStateChanged;
+                        }
+
+                    }
+                    
                 }
                 else
                 {
@@ -160,6 +193,15 @@ namespace MonitoringSystem.Base
                             break;
                     }
                 }
+            }
+        }
+
+        // ViewModel 中的事件处理（更新单条日志）
+        private static void OnDeviceRunningStateChanged(int DeviceId, bool isRunning)
+        {
+            foreach (var lt in GlobalMonitor.LogList.Where(m => m.RowNumber == DeviceId))
+            {
+                lt.LogInfo = isRunning ? "已启动" : "已关闭";
             }
         }
 

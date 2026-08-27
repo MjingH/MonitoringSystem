@@ -10,9 +10,14 @@ namespace MonitoringSystem.Model
 {
     public class DeviceModel : NotifyPropertyBase
     {
+        // 定义事件
+        public Action<int,bool> RunningStateChanged;
+
         public int DeviceId { get; set; }
         public string DeviceName { get; set; }
 
+
+        public LogType LogType { get; set; }
         //public bool IsRuning { get; set; }
 
         private bool _isRuning;
@@ -23,6 +28,14 @@ namespace MonitoringSystem.Model
             set 
             { 
                 _isRuning = value;
+                /* foreach (var lt in GlobalMonitor.LogList.Where(m => m.RowNumber == DeviceId))
+                 {
+                     lt.LogInfo = value?"已启动":"已关闭";
+                 }*/
+
+                // 触发状态变更事件，把当前实例传出去
+                RunningStateChanged?.Invoke(DeviceId, value);
+
                 this.RaisePropertyChanged();
             }
         }

@@ -74,5 +74,12 @@ namespace MonitoringSystem
         {
             this.Close();
         }
+
+        private void StackPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // 切换弹出状态
+            UserMenuPopup.IsOpen = !UserMenuPopup.IsOpen;
+            e.Handled = true; // 避免事件继续冒泡
+        }
     }
 }

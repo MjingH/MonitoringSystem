@@ -1,5 +1,6 @@
 ﻿using MonitoringSystem.Base;
 using MonitoringSystem.Model;
+using MonitoringSystem.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows;  // ★ 添加这一行
 
 namespace MonitoringSystem.ViewModel
 {
@@ -20,6 +22,9 @@ namespace MonitoringSystem.ViewModel
 
         public CommandBase conponentCommand { get; set; }
 
+        // private List<string> _deviceNameList;
+
+        public bool IsRunning { get; set; }
 
         private DeviceModel _currentDevice;
 
@@ -47,26 +52,44 @@ namespace MonitoringSystem.ViewModel
                 this.RaisePropertyChanged();
             }
         }
+        // 详情控件
+        public CommandBase ShowDetailCommand { get; set; }
 
         private void DoTowerCommand(object param)
         {
             CurrentDevice = param as DeviceModel;
+            
             IsShowdatil = true;
         }
+
+      
+
         public SystemMonitorViewModel()
         {
             InitLogInfo();
 
+            this.LogList = GlobalMonitor.LogList;
+
+            this.ShowDetailCommand = new CommandBase(new Action<object>(OnShowDetail));
             this.conponentCommand = new CommandBase(new Action<object>(DoTowerCommand));
         }
+
+        private void OnShowDetail(object param)
+        {
+            // 打开日志详情窗口
+            var detailWindow = new LogDetailWindow();
+            detailWindow.Owner = Application.Current.MainWindow;
+            //detailWindow.DataContext = this;
+            detailWindow.ShowDialog();
+        }
+
+
+
         void InitLogInfo()
         {
-            this.LogList.Add(new LogModel { RowNumber = 1, DeviceName = "冷却塔 1#", LogInfo = "已启动", LogType = Base.LogType.Info });
-            this.LogList.Add(new LogModel { RowNumber = 2, DeviceName = "冷却塔 2#", LogInfo = "已启动", LogType = Base.LogType.Info });
-            this.LogList.Add(new LogModel { RowNumber = 3, DeviceName = "冷却塔 3#", LogInfo = "液位极低", LogType = Base.LogType.Warn });
-            this.LogList.Add(new LogModel { RowNumber = 4, DeviceName = "循环水泵 1#", LogInfo = "频率过大", LogType = Base.LogType.Warn });
-            this.LogList.Add(new LogModel { RowNumber = 5, DeviceName = "循环水泵 2#", LogInfo = "已启动", LogType = Base.LogType.Info });
-            this.LogList.Add(new LogModel { RowNumber = 6, DeviceName = "循环水泵 3#", LogInfo = "已启动", LogType = Base.LogType.Info });
+
+
+            //this.LogList.Add(new LogModel { RowNumber = 1,DeviceNameList=GlobalMonitor.DeviceNameList ,LogInfo = "已启动", LogType = Base.LogType.Info });
 
             //  测试数据
             TestDevice = new DeviceModel();

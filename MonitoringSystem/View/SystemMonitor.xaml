@@ -15,6 +15,24 @@
         <!--<vm:SystemMonitorViewModel x:Key="smVM"/>-->
         <vm:SystemMonitorViewModel x:Key="smVM"/>
         <converter:BoolToVisvilityConverter x:Key="BoolToVisvilityConverter"/>
+
+        <ControlTemplate TargetType="Button" x:Key="ButtonTemplate">
+            <Border  x:Name="border" Background="{TemplateBinding Background }">
+                <TextBlock x:Name="contentText" 
+                   Text="{TemplateBinding Content}" 
+                   HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                   VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                   FontSize="{TemplateBinding FontSize}"     
+                   Foreground="{TemplateBinding Foreground}" /> 
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="border" Property="Background" Value="#22FFFFFF"/>
+                    <Setter TargetName="contentText" Property="FontSize" Value="12"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
         <ControlTemplate TargetType="ToggleButton" x:Key="StateButtonTemplate">
             <Border CornerRadius="3" Background="#EEE" Height="20" Name="back" Width="50">
                 <Grid>
@@ -27,7 +45,7 @@
                         </Border.RenderTransform>
                     </Border>
                 </Grid>
-            </Border> 
+            </Border>
             <ControlTemplate.Triggers>
                 <Trigger Property="IsChecked" Value="True">
                     <Trigger.EnterActions>
@@ -62,7 +80,8 @@
     <Grid  DataContext="{Binding Source={StaticResource smVM}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="320"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="97*"/>
+            <ColumnDefinition Width="48*"/>
             <ColumnDefinition Width="300"/>
         </Grid.ColumnDefinitions>
         <Canvas Background="Transparent" 
@@ -95,10 +114,10 @@
                             </TransformGroup>
                         </myCtl:PolygonTower.RenderTransform>
                     </myCtl:PolygonTower>
-                    
+
                     <!--背景-->
                     <Polygon VerticalAlignment="Top" Fill="#AAF7F9FA" Points="0,200 150,0 1000,0 1200,200 0,200" Stroke="#DDDFFDFF" StrokeThickness="2" Margin="-17,53,16,0"/>
-                   
+
                     <!--冷却塔-->
                     <myCtl:CoolingTower Width="90" Height="110" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="125,0,0,95"
                                         Command="{Binding Path=(vm:SystemMonitorViewModel.conponentCommand)}"
@@ -328,8 +347,8 @@
             <!--报警灯-->
 
             <ToggleButton  Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="False" IsChecked="{Binding CurrentDevice.IsWarning}" Template="{StaticResource WarningButtonTemplate}"/>
-
-            <ItemsControl Grid.Row="3" ItemsSource="{Binding CurrentDevice.WarningMessageList}">
+            <!--报警信息-->
+            <ItemsControl Grid.Row="3" ItemsSource="{Binding CurrentDevice.WarningMessageList}" Margin="8">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Message}" Foreground="#CCFF4400" TextWrapping="Wrap" LineHeight="22">
@@ -344,7 +363,7 @@
 
         </Grid>
 
-        <Grid   Grid.Row="0" Grid.Column="2" >
+        <Grid   Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Margin="182,0,10,0" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -370,13 +389,22 @@
             </UniformGrid>
 
             <TextBlock Text="实时日记" Foreground="#44FFFFFF" Grid.Row="2" Margin="5,10"/>
-            <TextBlock  HorizontalAlignment="Right" Grid.Row="2"  VerticalAlignment="Center" FontSize="11" Margin="5">
-                <!-- 超链接-->
-                <Hyperlink Foreground="#66DFFDFF">详情</Hyperlink>
-            </TextBlock>
+
+            <Button Panel.ZIndex="4" 
+                    HorizontalAlignment="Right" 
+                    Grid.Row="2" 
+                    VerticalAlignment="Center" 
+                    FontSize="11" 
+                    Margin="5"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Foreground="#66DFFDFF"
+                    Command="{Binding ShowDetailCommand}"
+                    Content="详情"
+                    Template="{StaticResource ButtonTemplate}"></Button>
 
             <!-- 集合-->
-            <ItemsControl Grid.Row="3" ItemsSource="{Binding Source={StaticResource smVM},Path=LogList}" AlternationCount="2">
+            <ItemsControl Grid.Row="3" ItemsSource="{Binding Path=(base:GlobalMonitor.LogList)}" AlternationCount="2">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
