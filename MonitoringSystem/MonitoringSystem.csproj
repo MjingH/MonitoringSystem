@@ -121,6 +121,7 @@
     <Compile Include="ViewModel\LogDetailViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\ReportViewModel.cs" />
     <Compile Include="ViewModel\SystemMonitorViewModel.cs" />
     <Compile Include="View\LogDetailWindow.xaml.cs">
       <DependentUpon>LogDetailWindow.xaml</DependentUpon>
