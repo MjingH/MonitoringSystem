@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using MonitoringSystem.Base;
+using MonitoringSystem.BLL;
 using MonitoringSystem.Model;
 using System;
 using System.Collections.Generic;
@@ -45,35 +46,35 @@ namespace MonitoringSystem.ViewModel
         public string SelectedDevice
         {
             get => _selectedDevice;
-            set { Set(ref _selectedDevice, value); }
+            set { Set(ref _selectedDevice, value); ApplyFilter();  }
         }
 
         private string _selectedLogType;
         public string SelectedLogType
         {
             get => _selectedLogType;
-            set { Set(ref _selectedLogType, value); }
+            set { Set(ref _selectedLogType, value); ApplyFilter(); }
         }
 
         private DateTime? _startTime;
         public DateTime? StartTime
         {
             get => _startTime;
-            set { Set(ref _startTime, value); }
+            set { Set(ref _startTime, value); ApplyFilter();  }
         }
 
         private DateTime? _endTime;
         public DateTime? EndTime
         {
             get => _endTime;
-            set { Set(ref _endTime, value); }
+            set { Set(ref _endTime, value); ApplyFilter();  }
         }
 
         private string _keyword;
         public string Keyword
         {
             get => _keyword;
-            set { Set(ref _keyword, value); }
+            set { Set(ref _keyword, value); ApplyFilter(); }
         }
 
         // ================= 统计信息 =================
@@ -103,6 +104,9 @@ namespace MonitoringSystem.ViewModel
 
         public ReportViewModel()
         {
+
+            MonitorSystemBLL.OnNewLogAdded += UpdataData;
+
             QueryCommand = new CommandBase(o => ApplyFilter());
             ResetCommand = new CommandBase(o => ResetFilter());
             ExportCommand = new CommandBase(o => Export());
@@ -110,6 +114,13 @@ namespace MonitoringSystem.ViewModel
             InitDeviceNames();
             InitData();
             ResetFilter();
+        }
+
+        private void UpdataData()
+        {
+            InitDeviceNames();
+            InitData();
+            ApplyFilter();
         }
 
         /// <summary>初始化设备名称下拉选项</summary>

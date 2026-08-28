@@ -234,15 +234,19 @@
     </UserControl.Resources>
 
     <Grid Background="Transparent" DataContext="{Binding Source={StaticResource vm}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- ============ 标题栏 ============ -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2,4,0,0">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2,4,0,0" Grid.ColumnSpan="2">
             <Rectangle Width="4" Height="20" Fill="#FF6800" RadiusX="2" RadiusY="2" VerticalAlignment="Center"/>
             <TextBlock Text="报表管理" Foreground="White" FontSize="20" FontWeight="Bold" Margin="10,0,0,0"/>
             <TextBlock Text="运行日志统计 · 查询 · 导出" Foreground="#7A8099" FontSize="12"
@@ -250,7 +254,7 @@
         </StackPanel>
 
         <!-- ============ 查询条件栏 ============ -->
-        <Border Grid.Row="1" Background="#B31E2230" CornerRadius="8" Padding="16,12" Margin="0,12,0,0">
+        <Border Grid.Row="1" Background="#B31E2230" CornerRadius="8" Padding="16,12" Margin="0,12,0,100" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="8,0,0,0">
                     <Button Content="查询" Style="{StaticResource AccentButtonStyle}" Command="{Binding QueryCommand}"/>
@@ -258,7 +262,7 @@
                     <Button Content="导出" Style="{StaticResource AccentButtonStyle}" Command="{Binding ExportCommand}"/>
                 </StackPanel>
 
-                <WrapPanel VerticalAlignment="Bottom">
+                <WrapPanel VerticalAlignment="Bottom" Panel.ZIndex="3">
                     <StackPanel Orientation="Vertical" Margin="0,0,16,0" Width="160">
                         <TextBlock Text="设备" Style="{StaticResource FilterLabel}"/>
                         <ComboBox ItemsSource="{Binding DeviceNames}" SelectedItem="{Binding SelectedDevice}"/>
@@ -292,7 +296,7 @@
         </Border>
 
         <!-- ============ 统计卡片 ============ -->
-        <UniformGrid Grid.Row="2" Columns="4" Margin="0,12,0,0">
+        <UniformGrid Grid.Row="2" Columns="4" Margin="0,12,0,0" Grid.ColumnSpan="2">
             <Border Style="{StaticResource StatCard}">
                 <StackPanel>
                     <TextBlock Text="{Binding TotalCount}" FontSize="30" FontWeight="Bold" Foreground="#38BDF8"/>
@@ -320,7 +324,7 @@
         </UniformGrid>
 
         <!-- ============ 数据表格 ============ -->
-        <Border Grid.Row="3" Background="#B31E2230" CornerRadius="8" Margin="0,12,0,0" Padding="12">
+        <Border Grid.Row="3" Background="#B31E2230" CornerRadius="8" Margin="0,12,0,0" Padding="12" Grid.ColumnSpan="2">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Bottom" Text="{Binding StatusMessage}" Foreground="#7A8099"
                            FontSize="12" Margin="4,8,4,0"/>
