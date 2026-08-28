@@ -31,8 +31,8 @@ namespace MonitoringSystem
                         // {
 
                         new MainWindow().ShowDialog();
-                       //  }
-                        Application.Current.Shutdown();
+                         //}
+                        //Application.Current.Shutdown();
                     }));
                 },
                 (msg) =>

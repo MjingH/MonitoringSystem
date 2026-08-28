@@ -60,5 +60,10 @@ namespace MonitoringSystem.Model
 
         public ObservableCollection<WarningMessageModel> WarningMessageList { get; set; } = 
             new ObservableCollection<WarningMessageModel>();
+
+        public override string ToString()
+        {
+            return DeviceName;
+        }
     }
 }

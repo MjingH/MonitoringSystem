@@ -10,11 +10,47 @@
         FontFamily="Microsoft YaHei" FontWeight="ExtraLight"
         Title="科技节能管理系统" Height="750" Width="1300"
         WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen"
-        MouseMove="Window_MouseMove">
+        MouseMove="Window_MouseMove"
+        x:Name="window"
+        PreviewMouseDown="Window_PreviewMouseDown">
+        
     <Window.Resources>
         
         <ResourceDictionary>
             <vm:LoginViewModel x:Key="LoginViewModel"/>
+
+            <!-- 用户下拉菜单按钮样式 -->
+            <Style x:Key="PopupMenuButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="#EEEEEE"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="Padding" Value="14,8"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="3"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#3D3D3D"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#4A4A4A"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <ResourceDictionary.MergedDictionaries>
                 
                 <ResourceDictionary Source="/Assets/Styles/WindowControlButtonStyle.xaml"/>
@@ -123,11 +159,11 @@
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
                                 <!--RadioButton提供一组互斥的选项，让用户只能从中选择一个，且选中后除非点击其他选项，否则不会自动取消 -->
                                 <RadioButton  Content="系统监控" CommandParameter="MonitoringSystem.View.SystemMonitor" Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\系统监控.png" Style="{StaticResource NavTabButtonStyle}" IsChecked="True"/>
-                                <RadioButton Content="实时曲线"   Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\实时曲线.png" Style="{StaticResource NavTabButtonStyle}"/>
-                                <RadioButton Content="历史曲线"  Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\历史曲线.png" Style="{StaticResource NavTabButtonStyle}"/>
-                                <RadioButton Content="控制策略"  Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\控制策略.png" Style="{StaticResource NavTabButtonStyle}"/>
-                                <RadioButton Content="系统操作"  Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\系统操作.png" Style="{StaticResource NavTabButtonStyle}"/>
-                                <RadioButton Content="报警管理"  Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\报警管理.png" Style="{StaticResource NavTabButtonStyle}"/>
+                                <RadioButton Content="实时曲线" CommandParameter="MonitoringSystem.View.RealTimeCurve" Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\实时曲线.png" Style="{StaticResource NavTabButtonStyle}"/>
+                                <!--<RadioButton Content="历史曲线" CommandParameter="MonitoringSystem.View.HistoryCurve" Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\历史曲线.png" Style="{StaticResource NavTabButtonStyle}"/>-->
+                                <!--<RadioButton Content="控制策略"  Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\控制策略.png" Style="{StaticResource NavTabButtonStyle}"/>-->
+                                <RadioButton Content="系统操作" CommandParameter="MonitoringSystem.View.SystemOperation" Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\系统操作.png" Style="{StaticResource NavTabButtonStyle}"/>
+                                <RadioButton Content="报警管理" CommandParameter="MonitoringSystem.View.AlarmManegerSystem"  Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\报警管理.png" Style="{StaticResource NavTabButtonStyle}"/>
                                 <RadioButton Content="报表管理" CommandParameter="MonitoringSystem.View.ReportManagement" Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\报表管理.png" Style="{StaticResource NavTabButtonStyle}"/>
                             </StackPanel>
                         </Border>
@@ -179,7 +215,7 @@
                     </MenuItem.Icon>
                 </MenuItem>
             </Menu>-->
-            
+
             <StackPanel Panel.ZIndex="3" 
                 Orientation="Horizontal" 
                 VerticalAlignment="Bottom" 
@@ -202,7 +238,7 @@
                 <Popup x:Name="UserMenuPopup" 
                         PlacementTarget="{Binding ElementName=UserInfoPanel}" 
                         Placement="Bottom"
-                         StaysOpen="False"
+                         StaysOpen="True"
                          AllowsTransparency="True"
                          PopupAnimation="Slide">
                  <Border Background="#2A2A2A" 
@@ -210,12 +246,21 @@
                         BorderThickness="1" 
                         CornerRadius="4"
                         Padding="5">
-                        <StackPanel>
-                            <Button Content="个人中心" />
-                            <Button Content="设置" />
+                        <StackPanel Width="130">
+                            <Button Content="个人中心"
+                                    Style="{StaticResource PopupMenuButtonStyle}"
+                                    Command="{Binding ProfileCommand}"
+                                    Click="UserMenuButton_Click"/>
+                            <Button Content="设置"
+                                    Style="{StaticResource PopupMenuButtonStyle}"
+                                    Command="{Binding SettingsCommand}"
+                                    Click="UserMenuButton_Click"/>
                             <Separator Background="#444" Margin="0,5"/>
-                            <Button Content="退出登录" 
-                                    Command="{Binding LogoutCommand}"/>
+                            <Button Content="退出登录"
+                                    Style="{StaticResource PopupMenuButtonStyle}"
+                                    Command="{Binding LogoutCommand}"
+                                    CommandParameter="{Binding ElementName=window}"
+                                    Click="UserMenuButton_Click"/>
                         </StackPanel>
                     </Border>
                 </Popup>

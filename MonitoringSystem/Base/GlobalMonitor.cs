@@ -14,6 +14,8 @@ namespace MonitoringSystem.Base
 {
     public class GlobalMonitor
     {
+
+        
         public static List<StorageModel> StorageList { get; set; }
 
         public static List<DeviceModel> DeviceList { get; set; }

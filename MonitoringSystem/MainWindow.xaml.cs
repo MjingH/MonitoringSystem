@@ -31,7 +31,16 @@ namespace MonitoringSystem
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
            if (e.LeftButton == MouseButtonState.Pressed) {
-                this.DragMove();
+                try
+                {
+                    this.DragMove(); 
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                
             }
         }
 
@@ -49,8 +58,17 @@ namespace MonitoringSystem
             }
             else
             {
-                // 拖拽移动窗口
-                this.DragMove();
+                try
+                {
+                    // 拖拽移动窗口
+                    this.DragMove();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                
             }
         }
 
@@ -72,7 +90,7 @@ namespace MonitoringSystem
 
         private void Close_Clice(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            App.Current.Shutdown();
         }
 
         private void StackPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -80,6 +98,38 @@ namespace MonitoringSystem
             // 切换弹出状态
             UserMenuPopup.IsOpen = !UserMenuPopup.IsOpen;
             e.Handled = true; // 避免事件继续冒泡
+        }
+
+        /// <summary>
+        /// 点击窗口其他位置时关闭下拉菜单（点击菜单内部不会触发，因为 Popup 是独立窗口）
+        /// </summary>
+        private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!UserMenuPopup.IsOpen) return;
+
+            var source = e.OriginalSource as DependencyObject;
+            if (source != null && IsDescendantOf(source, UserInfoPanel)) return;
+
+            UserMenuPopup.IsOpen = false;
+        }
+
+        /// <summary>
+        /// 点击下拉菜单中的按钮后关闭菜单
+        /// </summary>
+        private void UserMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            UserMenuPopup.IsOpen = false;
+        }
+
+        private bool IsDescendantOf(DependencyObject child, DependencyObject parent)
+        {
+            DependencyObject current = child;
+            while (current != null)
+            {
+                if (ReferenceEquals(current, parent)) return true;
+                current = VisualTreeHelper.GetParent(current) ?? LogicalTreeHelper.GetParent(current);
+            }
+            return false;
         }
     }
 }

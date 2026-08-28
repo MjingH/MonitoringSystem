@@ -268,7 +268,8 @@ namespace MonitoringSystem.ViewModel
             this.CloseWindowCommand.DoCanExecute = new Func<object, bool>((o) => { return true; });
             this.CloseWindowCommand.DoExecute = new Action<object>((o) =>
             {
-                (o as Window).Close();
+                //(o as Window).Close();
+                Application.Current.Shutdown();
             });
             
             this.LoginCommand = new CommandBase1();
@@ -331,8 +332,6 @@ namespace MonitoringSystem.ViewModel
                      
                      monitorSystemBLL = new MonitorSystemBLL();
                       user = monitorSystemBLL.LoginUser(UserModel.UserName, UserModel.Password);
-                     
-                     Console.WriteLine(user.Data[0].UserName);
                      if (!user.State)
                      {
                          MessageError = user.Message;
@@ -346,6 +345,7 @@ namespace MonitoringSystem.ViewModel
                          {
                              GlobalMonitor.CurrentUsername = UserModel.UserName; // 保存到全局
                              (o as LoginSystem).DialogResult = true;
+                             new MainWindow().ShowDialog();
                          }));
                      }
                  }

@@ -1,4 +1,4 @@
-﻿using MonitoringSystem.ViewModel;
+using MonitoringSystem.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,19 +17,14 @@ using System.Windows.Shapes;
 namespace MonitoringSystem.View
 {
     /// <summary>
-    /// ReportManagement.xaml 的交互逻辑
+    /// SystemOperation.xaml 的交互逻辑
     /// </summary>
-    public partial class ReportManagement : UserControl
+    public partial class SystemOperation : UserControl
     {
-        public ReportManagement()
+        public SystemOperation()
         {
             InitializeComponent();
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            // 每次加载时，强制从静态数据源重新拉取
-          //  (this.DataContext as ReportViewModel)?.ApplyFilter();
+            this.DataContext = new SystemOperationViewModel();
         }
     }
 }

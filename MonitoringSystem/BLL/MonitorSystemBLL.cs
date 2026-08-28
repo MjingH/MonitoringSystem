@@ -2,6 +2,7 @@
 using MonitoringSystem.Base;
 using MonitoringSystem.DAL;
 using MonitoringSystem.Model;
+using MonitoringSystem.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +18,8 @@ namespace MonitoringSystem.BLL
 {
     public class MonitorSystemBLL
     {
+
+        public static event Action OnNewLogAdded;
         // 创建全局DataAccess对象
         DataAccess da = new DataAccess();
 
@@ -213,9 +216,9 @@ namespace MonitoringSystem.BLL
                                 if (state != Base.MonitorValueState.OK)
                                 {
                                     model.IsWarning = true;
-                                    
-                                   
 
+
+                                    new ReportViewModel();
 
 
                                     // 添加报警日志
@@ -224,6 +227,8 @@ namespace MonitoringSystem.BLL
                                         ValueId = value_id,
                                         Message = msg
                                     });
+
+                                    OnNewLogAdded?.Invoke(); // 通知所有订阅者
 
                                     // 给logType赋值
                                     foreach (var lt in GlobalMonitor.LogList.Where(m => m.RowNumber == model.DeviceId))
@@ -237,7 +242,8 @@ namespace MonitoringSystem.BLL
                                             DeviceName = lt.DeviceName,
                                             LogInfo = lt.LogInfo,
                                             LogType = lt.LogType,
-                                            Message = msg
+                                            Message = msg,
+                                            AlarmTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                                             //WarningMessageList  = new ObservableCollection<WarningMessageModel>
                                             //{
 

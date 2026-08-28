@@ -117,23 +117,35 @@
     <Compile Include="Base\PasswordhHelper.cs" />
     <Compile Include="Model\LogModel.cs" />
     <Compile Include="Model\UserModel.cs" />
+    <Compile Include="ViewModel\AlarmManegerViewModel.cs" />
     <Compile Include="ViewModel\CaptchaViewModel.cs" />
     <Compile Include="ViewModel\LogDetailViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\RealTimeCurveViewModel.cs" />
     <Compile Include="ViewModel\ReportViewModel.cs" />
     <Compile Include="ViewModel\SystemMonitorViewModel.cs" />
+    <Compile Include="ViewModel\SystemOperationViewModel.cs" />
+    <Compile Include="View\AlarmManegerSystem.xaml.cs">
+      <DependentUpon>AlarmManegerSystem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\LogDetailWindow.xaml.cs">
       <DependentUpon>LogDetailWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\LoginSystem.xaml.cs">
       <DependentUpon>LoginSystem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\RealTimeCurve.xaml.cs">
+      <DependentUpon>RealTimeCurve.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ReportManagement.xaml.cs">
       <DependentUpon>ReportManagement.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SystemMonitor.xaml.cs">
       <DependentUpon>SystemMonitor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SystemOperation.xaml.cs">
+      <DependentUpon>SystemOperation.xaml</DependentUpon>
     </Compile>
     <Page Include="Assets\Styles\WindowControlButtonStyle.xaml">
       <SubType>Designer</SubType>
@@ -157,11 +169,19 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\AlarmManegerSystem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\LogDetailWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\LoginSystem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RealTimeCurve.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -173,9 +193,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\SystemOperation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\DeviceModel.cs" />
+    <Compile Include="Model\ReportItemModel.cs" />
     <Compile Include="Model\MonitorValueModel.cs" />
     <Compile Include="Model\StorageModel.cs" />
     <Compile Include="Model\WarningMessageModel.cs" />

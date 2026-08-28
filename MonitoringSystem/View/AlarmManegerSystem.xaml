@@ -1,15 +1,19 @@
-﻿<UserControl x:Class="MonitoringSystem.View.ReportManagement"
+﻿<UserControl x:Class="MonitoringSystem.View.AlarmManegerSystem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MonitoringSystem.View"
-             xmlns:vm="clr-namespace:MonitoringSystem.ViewModel"
-             mc:Ignorable="d"
-             d:DesignHeight="650" d:DesignWidth="1200">
+             xmlns:base="clr-namespace:MonitoringSystem.Base"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="1200"
+             Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
-        <vm:ReportViewModel x:Key="vm"/>
-
+        
+        <!-- 添加以下行，覆盖非活动选中背景 -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" 
+                     Color="#232838" />
+        
         <!-- ============ 通用颜色与控件样式 ============ -->
         <Style x:Key="FilterLabel" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#9AA3B8"/>
@@ -113,12 +117,6 @@
             </Setter>
         </Style>
 
-        <!-- 日期选择器 -->
-        <Style TargetType="DatePicker">
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-
         <!-- 通用按钮模板 -->
         <Style x:Key="FilterButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="32"/>
@@ -167,6 +165,31 @@
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="bd" Property="Background" Value="#D95700"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 危险操作按钮（清除报警） -->
+        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource FilterButtonStyle}">
+            <Setter Property="Background" Value="#DC2626"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#F87171"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#B91C1C"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.5"/>
@@ -233,7 +256,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Background="Transparent" DataContext="{Binding Source={StaticResource vm}}">
+    <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -244,65 +267,23 @@
         <!-- ============ 标题栏 ============ -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2,4,0,0">
             <Rectangle Width="4" Height="20" Fill="#FF6800" RadiusX="2" RadiusY="2" VerticalAlignment="Center"/>
-            <TextBlock Text="报表管理" Foreground="White" FontSize="20" FontWeight="Bold" Margin="10,0,0,0"/>
-            <TextBlock Text="运行日志统计 · 查询 · 导出" Foreground="#7A8099" FontSize="12"
+            <TextBlock Text="报警管理" Foreground="White" FontSize="20" FontWeight="Bold" Margin="10,0,0,0"/>
+            <TextBlock Text="设备报警状态 · 报警日志 · 实时监控" Foreground="#7A8099" FontSize="12"
                        VerticalAlignment="Bottom" Margin="14,0,0,3"/>
         </StackPanel>
 
-        <!-- ============ 查询条件栏 ============ -->
-        <Border Grid.Row="1" Background="#B31E2230" CornerRadius="8" Padding="16,12" Margin="0,12,0,0">
-            <DockPanel>
-                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="8,0,0,0">
-                    <Button Content="查询" Style="{StaticResource AccentButtonStyle}" Command="{Binding QueryCommand}"/>
-                    <Button Content="重置" Style="{StaticResource FilterButtonStyle}" Command="{Binding ResetCommand}"/>
-                    <Button Content="导出" Style="{StaticResource AccentButtonStyle}" Command="{Binding ExportCommand}"/>
-                </StackPanel>
-
-                <WrapPanel VerticalAlignment="Bottom">
-                    <StackPanel Orientation="Vertical" Margin="0,0,16,0" Width="160">
-                        <TextBlock Text="设备" Style="{StaticResource FilterLabel}"/>
-                        <ComboBox ItemsSource="{Binding DeviceNames}" SelectedItem="{Binding SelectedDevice}"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Vertical" Margin="0,0,16,0" Width="120">
-                        <TextBlock Text="日志类型" Style="{StaticResource FilterLabel}"/>
-                        <ComboBox ItemsSource="{Binding LogTypeOptions}" SelectedItem="{Binding SelectedLogType}"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Vertical" Margin="0,0,16,0" Width="150">
-                        <TextBlock Text="开始日期" Style="{StaticResource FilterLabel}"/>
-                        <DatePicker SelectedDate="{Binding StartTime}"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Vertical" Margin="0,0,16,0" Width="150">
-                        <TextBlock Text="结束日期" Style="{StaticResource FilterLabel}"/>
-                        <DatePicker SelectedDate="{Binding EndTime}"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Vertical" Width="220">
-                        <TextBlock Text="关键字" Style="{StaticResource FilterLabel}"/>
-                        <TextBox Text="{Binding Keyword, UpdateSourceTrigger=PropertyChanged}">
-                            <TextBox.InputBindings>
-                                <KeyBinding Key="Enter" Command="{Binding QueryCommand}"/>
-                            </TextBox.InputBindings>
-                        </TextBox>
-                    </StackPanel>
-                </WrapPanel>
-            </DockPanel>
-        </Border>
-
         <!-- ============ 统计卡片 ============ -->
-        <UniformGrid Grid.Row="2" Columns="4" Margin="0,12,0,0">
+        <UniformGrid Grid.Row="1" Columns="4" Margin="0,12,0,0">
             <Border Style="{StaticResource StatCard}">
                 <StackPanel>
-                    <TextBlock Text="{Binding TotalCount}" FontSize="30" FontWeight="Bold" Foreground="#38BDF8"/>
-                    <TextBlock Text="总记录数" Foreground="#9AA3B8" FontSize="13" Margin="0,6,0,0"/>
+                    <TextBlock Text="{Binding ActiveAlarmCount}" FontSize="30" FontWeight="Bold" Foreground="#F87171"/>
+                    <TextBlock Text="活动报警设备" Foreground="#9AA3B8" FontSize="13" Margin="0,6,0,0"/>
                 </StackPanel>
             </Border>
             <Border Style="{StaticResource StatCard}">
                 <StackPanel>
-                    <TextBlock Text="{Binding InfoCount}" FontSize="30" FontWeight="Bold" Foreground="#34D399"/>
-                    <TextBlock Text="信息" Foreground="#9AA3B8" FontSize="13" Margin="0,6,0,0"/>
+                    <TextBlock Text="{Binding TotalAlarmCount}" FontSize="30" FontWeight="Bold" Foreground="#38BDF8"/>
+                    <TextBlock Text="报警记录总数" Foreground="#9AA3B8" FontSize="13" Margin="0,6,0,0"/>
                 </StackPanel>
             </Border>
             <Border Style="{StaticResource StatCard}">
@@ -319,39 +300,154 @@
             </Border>
         </UniformGrid>
 
-        <!-- ============ 数据表格 ============ -->
-        <Border Grid.Row="3" Background="#B31E2230" CornerRadius="8" Margin="0,12,0,0" Padding="12">
+        <!-- ============ 查询条件栏 ============ -->
+        <Border Grid.Row="2" Background="#B31E2230" CornerRadius="8" Padding="16,12" Margin="0,12,0,0">
             <DockPanel>
-                <TextBlock DockPanel.Dock="Bottom" Text="{Binding StatusMessage}" Foreground="#7A8099"
-                           FontSize="12" Margin="4,8,4,0"/>
-                <DataGrid ItemsSource="{Binding ReportList}" AlternationCount="2">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="序号" Binding="{Binding RowNumber}" Width="70"/>
-                        <DataGridTextColumn Header="时间" Binding="{Binding ReportTimeText}" Width="170"/>
-                        <DataGridTextColumn Header="设备名称" Binding="{Binding DeviceName}" Width="150"/>
-                        <DataGridTextColumn Header="事件" Binding="{Binding EventInfo}" Width="120"/>
-                        <DataGridTemplateColumn Header="日志类型" Width="100">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border x:Name="badge" CornerRadius="10" Background="#4A5568"
-                                            Padding="10,2" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding LogTypeText}" Foreground="White" FontSize="12"/>
-                                    </Border>
-                                    <DataTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding LogType}" Value="1">
-                                            <Setter TargetName="badge" Property="Background" Value="#D97706"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding LogType}" Value="2">
-                                            <Setter TargetName="badge" Property="Background" Value="#DC2626"/>
-                                        </DataTrigger>
-                                    </DataTemplate.Triggers>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="日志信息" Binding="{Binding Message}" Width="*"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="8,0,0,0">
+                    <Button Content="查询" Style="{StaticResource AccentButtonStyle}" Command="{Binding QueryCommand}"/>
+                    <Button Content="重置" Style="{StaticResource FilterButtonStyle}" Command="{Binding ResetCommand}"/>
+                    <Button Content="刷新" Style="{StaticResource AccentButtonStyle}" Command="{Binding RefreshCommand}"/>
+                    <Button Content="日志详情" Style="{StaticResource FilterButtonStyle}" Command="{Binding ShowDetailCommand}"/>
+                </StackPanel>
+
+                <WrapPanel VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Vertical" Margin="0,0,16,0" Width="160">
+                        <TextBlock Text="设备" Style="{StaticResource FilterLabel}"/>
+                        <ComboBox ItemsSource="{Binding DeviceNameOptions}" SelectedItem="{Binding SelectedDeviceName}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" Margin="0,0,16,0" Width="120">
+                        <TextBlock Text="日志类型" Style="{StaticResource FilterLabel}"/>
+                        <ComboBox ItemsSource="{Binding LogTypeOptions}" SelectedItem="{Binding SelectedLogType}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" Width="240">
+                        <TextBlock Text="关键字" Style="{StaticResource FilterLabel}"/>
+                        <TextBox Text="{Binding Keyword, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding QueryCommand}"/>
+                            </TextBox.InputBindings>
+                        </TextBox>
+                    </StackPanel>
+                </WrapPanel>
             </DockPanel>
         </Border>
+
+        <!-- ============ 主体：设备列表 + 报警日志 ============ -->
+        <Grid Grid.Row="3" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 左侧：设备报警状态 -->
+            <Border Grid.Column="0" Background="#B31E2230" CornerRadius="8" Padding="12" Margin="0,0,12,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="设备报警状态" Foreground="White" FontSize="14" FontWeight="SemiBold" Margin="4,0,0,8"/>
+
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding DeviceList}"
+                              SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="设备名称" Binding="{Binding DeviceName}" Width="*"/>
+                            <DataGridTemplateColumn Header="运行" Width="66">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border x:Name="runBadge" CornerRadius="10" Background="#4A5568"
+                                                Padding="10,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <TextBlock x:Name="runText" Text="停机" Foreground="White" FontSize="12"/>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsRuning}" Value="True">
+                                                <Setter TargetName="runText" Property="Text" Value="运行"/>
+                                                <Setter TargetName="runBadge" Property="Background" Value="#16A34A"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="报警" Width="66">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border x:Name="alarmBadge" CornerRadius="10" Background="#16A34A"
+                                                Padding="10,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <TextBlock x:Name="alarmText" Text="正常" Foreground="White" FontSize="12"/>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsWarning}" Value="True">
+                                                <Setter TargetName="alarmText" Property="Text" Value="报警"/>
+                                                <Setter TargetName="alarmBadge" Property="Background" Value="#DC2626"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="报警数" Binding="{Binding WarningMessageList.Count}" Width="60"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Grid Grid.Row="2" Margin="0,10,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="当前设备报警信息" Foreground="#9AA3B8" FontSize="12" Margin="4,0,0,6"/>
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding SelectedDevice.WarningMessageList}" MaxHeight="140">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#33FF4400" CornerRadius="4" Margin="0,0,0,4" Padding="8,6">
+                                        <TextBlock Text="{Binding Message}" Foreground="#FFD2C8" TextWrapping="Wrap"
+                                                   FontSize="12" LineHeight="18"/>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Button Grid.Row="2" Content="清除报警" Style="{StaticResource DangerButtonStyle}"
+                                HorizontalAlignment="Right" Margin="0,8,0,0"
+                                Command="{Binding ClearAlarmCommand}"
+                                CommandParameter="{Binding SelectedDevice}"/>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- 右侧：报警日志 -->
+            <Border Grid.Column="1" Background="#B31E2230" CornerRadius="8" Padding="12">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="报警日志" Foreground="White" FontSize="14"
+                               FontWeight="SemiBold" Margin="4,0,0,8"/>
+                    <TextBlock DockPanel.Dock="Bottom" Text="{Binding StatusMessage}" Foreground="#7A8099"
+                               FontSize="12" Margin="4,8,4,0"/>
+                    <DataGrid ItemsSource="{Binding AlarmLogList}" AlternationCount="2">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="时间" Binding="{Binding AlarmTime}" Width="160"/>
+                            <DataGridTextColumn Header="设备名称" Binding="{Binding DeviceName}" Width="150"/>
+                            <DataGridTemplateColumn Header="类型" Width="90">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border x:Name="badge" CornerRadius="10" Background="#D97706"
+                                                Padding="10,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <TextBlock x:Name="typeText" Text="警告" Foreground="White" FontSize="12"/>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding LogType}" Value="2">
+                                                <Setter TargetName="badge" Property="Background" Value="#DC2626"/>
+                                                <Setter TargetName="typeText" Property="Text" Value="故障"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="报警信息" Binding="{Binding Message}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

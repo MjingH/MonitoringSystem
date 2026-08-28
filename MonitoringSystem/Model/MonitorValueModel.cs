@@ -61,10 +61,17 @@ namespace MonitoringSystem.Model
                 RaisePropertyChanged();
                 Values.Add(new ObservableValue(value));
                 if (Values.Count > 60) Values.RemoveAt(0);
+
+                // 历史曲线数据：保留更长的采样窗口（约 1 小时，按 1 秒采样估算）
+                HistoryValues.Add(new ObservableValue(value));
+                if (HistoryValues.Count > 3600) HistoryValues.RemoveAt(0);
             }
         }
 
         public ChartValues<ObservableValue> Values { get; set; } = new ChartValues<ObservableValue>();  
+
+        /// <summary>历史采样数据（自程序启动以来累计，用于历史曲线展示）</summary>
+        public ChartValues<ObservableValue> HistoryValues { get; set; } = new ChartValues<ObservableValue>();
       
     }
 }
