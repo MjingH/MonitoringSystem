@@ -65,9 +65,7 @@ namespace MonitoringSystem
                 }
                 catch (Exception ex)
                 {
-
-                    MessageBox.Show(ex.ToString(), "警告",
-                MessageBoxButton.OK, MessageBoxImage.Warning); ;
+                    Console.WriteLine(ex.Message);
                 }
                 
             }

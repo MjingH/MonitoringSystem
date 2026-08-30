@@ -182,7 +182,21 @@ namespace MonitoringSystem.ViewModel
         private void ToggleUserStatus(object o)
         {
             if (!(o is UserModel user)) return;
+
+            if(user.IsAdmin == 1)
+            {
+                    MessageBox.Show("不能禁用管理员用户！", "提示",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+         
+
             if (!CheckAdmin()) return;
+
+            MessageBoxResult result1 = MessageBox.Show($"确认{(user.Status ? "禁用" : "启用")}用户「{user.UserName}」吗？", "操作确认",
+             MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result1 == MessageBoxResult.No) return;
 
             bool newStatus = !user.Status;
             var bll = new MonitorSystemBLL();
@@ -208,6 +222,13 @@ namespace MonitoringSystem.ViewModel
             if (user.UserName == CurrentUsername)
             {
                 MessageBox.Show("不能删除当前登录用户！", "提示",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if(user.IsAdmin == 1)
+            {
+                MessageBox.Show("不能删除管理员用户！", "提示",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
