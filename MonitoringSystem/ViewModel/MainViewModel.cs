@@ -52,7 +52,7 @@ namespace MonitoringSystem.ViewModel
 
         public MainViewModel()
         {
-            CurrentUsername = GlobalMonitor.CurrentUsername;
+            CurrentUsername = GlobalMonitor.CurrentUsername ?? "未登录";
 
             //UserModel = new UserModel();
 

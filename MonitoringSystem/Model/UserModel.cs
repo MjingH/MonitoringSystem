@@ -32,11 +32,19 @@ namespace MonitoringSystem.Model
             set { _userName = value;RaisePropertyChanged(); }
         }
 
-        public bool Status { get; set; }
+        private bool _status;
+
+        public bool Status
+        {
+            get { return _status; }
+            set { _status = value; RaisePropertyChanged(); }
+        }
 
         public bool Sex { get; set; }
 
         public string CreateTime { get; set; }
+
+        public int IsAdmin { get; set; }
 
         public string UpdateTime { get; set; }
     }

@@ -63,10 +63,11 @@ namespace MonitoringSystem
                     // 拖拽移动窗口
                     this.DragMove();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
-                    throw;
+                    MessageBox.Show(ex.ToString(), "警告",
+                MessageBoxButton.OK, MessageBoxImage.Warning); ;
                 }
                 
             }

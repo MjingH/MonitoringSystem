@@ -7,6 +7,24 @@
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="1200">
     <UserControl.Resources>
+
+        <ControlTemplate TargetType="Button" x:Key="ButtonTemplate">
+            <Border x:Name="border" Background="{TemplateBinding Background}" >
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <!--<Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="border" Property="Background" Value="White"/>
+                </Trigger>-->
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="border" Property="Background" Value="#4A5068"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
         <!-- ============ 通用控件样式 ============ -->
         <Style x:Key="FilterLabel" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#9AA3B8"/>
@@ -264,7 +282,8 @@
 
         <!-- 添加以下行，覆盖非活动选中背景 -->
         <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" 
-                     Color="#232838" />
+                 Color="#696e8a" />
+
     </UserControl.Resources>
 
     <Grid Background="Transparent">
@@ -391,18 +410,22 @@
             </TabItem>
 
             <!-- 用户管理 -->
-            <TabItem Header="用户管理">
+            <TabItem Header="用户管理" Margin="0,2,4,-2">
                 <Border Style="{StaticResource PanelCard}">
                     <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="217*"/>
+                            <ColumnDefinition Width="955*"/>
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="系统用户" Foreground="White" FontSize="14" FontWeight="SemiBold" Margin="4,0,0,8"/>
-                        <DataGrid Grid.Row="1" ItemsSource="{Binding UserList}">
+                        <TextBlock Text="系统用户" Foreground="White" FontSize="14" FontWeight="SemiBold" Margin="4,0,0,8" Grid.ColumnSpan="2"/>
+                        <DataGrid Grid.Row="1" ItemsSource="{Binding UserList}" Grid.ColumnSpan="2">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
-                                <DataGridTextColumn Header="用户名" Binding="{Binding UserName}" Width="*"/>
+                                <DataGridTextColumn Header="用户名" Binding="{Binding UserName}" Width="200"/>
                                 <DataGridTextColumn Header="姓名" Binding="{Binding Name}" Width="140"/>
                                 <DataGridTemplateColumn Header="性别" Width="80">
                                     <DataGridTemplateColumn.CellTemplate>
@@ -416,23 +439,42 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Header="创建时间" Binding="{Binding CreateTime}" Width="170"/>
                                 <DataGridTemplateColumn Header="状态" Width="90">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Border x:Name="stBadge" CornerRadius="10" Background="#DC2626"
-                                                    Padding="10,2" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                                <TextBlock x:Name="stText" Text="禁用" Foreground="White" FontSize="12"/>
+                                                    Width="50" Height="25" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                <Button x:Name="stBtn" Template="{StaticResource ButtonTemplate}" Content="禁用" Background="Transparent" BorderThickness="0" Foreground="White" FontSize="12"
+                                                        Command="{Binding DataContext.ToggleUserStatusCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"/>
+                                                <!--Command="{Binding DataContext.ToggleUserStatusCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"-->
                                             </Border>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding Status}" Value="True">
-                                                    <Setter TargetName="stText" Property="Text" Value="启用"/>
+                                                    <Setter TargetName="stBtn" Property="Content" Value="启用"/>
                                                     <Setter TargetName="stBadge" Property="Background" Value="#16A34A"/>
                                                 </DataTrigger>
                                             </DataTemplate.Triggers>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="创建时间" Binding="{Binding CreateTime}" Width="170"/>
+
+                                <DataGridTemplateColumn Header="管理" Width="90">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border x:Name="stBadge" CornerRadius="10" Background="#DC2626"
+                                                    Width="50" Height="25" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                <Button x:Name="stBtn" Template="{StaticResource ButtonTemplate}" Content="删除" Background="Transparent" BorderThickness="0" Foreground="White" FontSize="12"
+                                                        Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"/>
+                                                <!--DataContext 是一个可继承的依赖属性。意思是：如果某个控件自己没有设置 DataContext，它会沿着可视化树向上找，直到找到第一个设置了 DataContext 的父级控件，并继承它。-->
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -504,7 +546,7 @@
                                     Command="{Binding RefreshCommand}"/>
                             <Button Content="保存串口设置" Style="{StaticResource AccentButtonStyle}"
                                     Command="{Binding SaveSerialCommand}"/>
-                            <TextBlock Text="{Binding StatusMessage}" Foreground="#7A8099" FontSize="12"
+                            <TextBlock Text="{Binding StatusMessage}" Foreground="Red" FontSize="12"
                                        VerticalAlignment="Center" Margin="16,0,0,0"/>
                         </StackPanel>
                     </Grid>

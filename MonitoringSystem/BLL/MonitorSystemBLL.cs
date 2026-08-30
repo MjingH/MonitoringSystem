@@ -98,7 +98,8 @@ namespace MonitoringSystem.BLL
                                   Sex = q.Field<bool>("sex"),
                                   Password = q.Field<string>("password"),
                                   CreateTime = q.Field<string>("create_time"),
-                                  UpdateTime = q.Field<string>("updata_time")
+                                  UpdateTime = q.Field<string>("updata_time"),
+                                  IsAdmin = q.Field<int>("is_admin")
                               }).ToList();
                 result.State = true;
                 result.Data = values;
@@ -262,7 +263,6 @@ namespace MonitoringSystem.BLL
                             });
                         };
                     }
-
                 }
                 result.State = true;
                 result.Data = deviceModels;
@@ -274,6 +274,40 @@ namespace MonitoringSystem.BLL
 
             return result;
 
+        }
+
+        /// <summary>更新用户启用/禁用状态（实时写库）</summary>
+        public DataResult<bool> UpdateUserStatus(int id, bool status)
+        {
+            DataResult<bool> result = new DataResult<bool>();
+            try
+            {
+                result.State = da.UpdateUserStatus(id, status);
+                if (!result.State)
+                    result.Message = "更新失败";
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+            }
+            return result;
+        }
+
+        /// <summary>删除用户（实时写库）</summary>
+        public DataResult<bool> DeleteUser(int id)
+        {
+            DataResult<bool> result = new DataResult<bool>();
+            try
+            {
+                result.State = da.DeleteUser(id);
+                if (!result.State)
+                    result.Message = "删除失败";
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+            }
+            return result;
         }
     }
 }

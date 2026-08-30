@@ -30,7 +30,7 @@ namespace MonitoringSystem.Base
 
         public static SerialInfo SerialInfo { get; set; }
 
-        public static List<UserModel> UserList { get; set; }
+        public static ObservableCollection<UserModel> UserList { get; set; }
 
         static bool isRunning = true;
         static Task mainTask = null;
@@ -58,7 +58,7 @@ namespace MonitoringSystem.Base
                 var user = bll.InitUsers();
                 if (user.State)
                 {
-                    UserList =  user.Data;
+                    UserList = new ObservableCollection<UserModel>(user.Data);
                 }
                 else
                 {

@@ -1,11 +1,14 @@
 using Communication1;
 using MonitoringSystem.Base;
+using MonitoringSystem.BLL;
 using MonitoringSystem.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.IO.Ports;
 using System.Linq;
+using System.Windows;
 
 namespace MonitoringSystem.ViewModel
 {
@@ -16,7 +19,7 @@ namespace MonitoringSystem.ViewModel
     {
         // ================= 数据源（直接引用全局静态数据） =================
         public List<DeviceModel> DeviceList => GlobalMonitor.DeviceList ?? new List<DeviceModel>();
-        public List<UserModel> UserList => GlobalMonitor.UserList ?? new List<UserModel>();
+        public ObservableCollection<UserModel> UserList => GlobalMonitor.UserList ?? new ObservableCollection<UserModel>();
         public List<StorageModel> StorageList => GlobalMonitor.StorageList ?? new List<StorageModel>();
 
         private DeviceModel _selectedDevice;
@@ -66,11 +69,15 @@ namespace MonitoringSystem.ViewModel
         // ================= 命令 =================
         public CommandBase RefreshCommand { get; set; }
         public CommandBase SaveSerialCommand { get; set; }
+        public CommandBase ToggleUserStatusCommand { get; set; }
+        public CommandBase DeleteUserCommand { get; set; }
 
         public SystemOperationViewModel()
         {
             RefreshCommand = new CommandBase(o => Refresh());
             SaveSerialCommand = new CommandBase(o => SaveSerialSettings());
+            ToggleUserStatusCommand = new CommandBase(o => ToggleUserStatus(o));
+            DeleteUserCommand = new CommandBase(o => DeleteUser(o));
 
             Refresh();
         }
@@ -124,7 +131,11 @@ namespace MonitoringSystem.ViewModel
                 SetOrAdd(config.AppSettings.Settings, "data_bit", DataBit.ToString());
                 SetOrAdd(config.AppSettings.Settings, "parity", Parity);
                 SetOrAdd(config.AppSettings.Settings, "stopbit", StopBits);
+                //config.Save(ConfigurationSaveMode.Modified) 将更改写回磁盘上的.config 文件。Modified 模式仅保存已修改的节，提高效率。
                 config.Save(ConfigurationSaveMode.Modified);
+
+                //强制刷新 appSettings 节的缓存
+                //此刷新仅影响 ConfigurationManager 的静态缓存，不会影响已打开的 config 对象实例
                 ConfigurationManager.RefreshSection("appSettings");
 
                 // 同步内存中的串口信息（重启程序后读取配置生效）
@@ -151,6 +162,73 @@ namespace MonitoringSystem.ViewModel
                 settings[key].Value = value;
             else
                 settings.Add(key, value);
+        }
+
+        // ================= 用户管理：启用/禁用、删除 =================
+
+        /// <summary>判断当前登录用户是否为管理员（is_admin == 1）</summary>
+        private bool CheckAdmin()
+        {
+            var user = GlobalMonitor.UserList?.FirstOrDefault(u => u.UserName == CurrentUsername);
+            if (user != null && user.IsAdmin == 1)
+                return true;
+
+            MessageBox.Show("当前用户不是管理员，无权修改！", "权限不足",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        /// <summary>启用/禁用用户：管理员校验通过后实时写库并刷新界面</summary>
+        private void ToggleUserStatus(object o)
+        {
+            if (!(o is UserModel user)) return;
+            if (!CheckAdmin()) return;
+
+            bool newStatus = !user.Status;
+            var bll = new MonitorSystemBLL();
+            var result = bll.UpdateUserStatus(user.Id, newStatus);
+            if (result.State)
+            {
+                user.Status = newStatus; // Status 已实现通知，徽标实时刷新
+                StatusMessage = $"已{(newStatus ? "启用" : "禁用")}用户 {user.UserName}";
+            }
+            else
+            {
+                MessageBox.Show("操作失败：" + result.Message, "错误",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>删除用户：管理员校验通过后实时写库并刷新界面</summary>
+        private void DeleteUser(object o)
+        {
+            if (!(o is UserModel user)) return;
+            if (!CheckAdmin()) return;
+
+            if (user.UserName == CurrentUsername)
+            {
+                MessageBox.Show("不能删除当前登录用户！", "提示",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var r = MessageBox.Show($"确认删除用户「{user.UserName}」吗？", "删除确认",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (r != MessageBoxResult.Yes) return;
+
+            var bll = new MonitorSystemBLL();
+            var result = bll.DeleteUser(user.Id);
+            if (result.State)
+            {
+                GlobalMonitor.UserList?.Remove(user); // ObservableCollection，界面实时移除该行
+                UserCount = UserList.Count;
+                StatusMessage = $"已删除用户 {user.UserName}";
+            }
+            else
+            {
+                MessageBox.Show("删除失败：" + result.Message, "错误",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

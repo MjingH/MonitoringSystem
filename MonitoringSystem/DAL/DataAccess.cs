@@ -198,5 +198,32 @@ namespace MonitoringSystem.DAL
             String strsql = "select * from users";
             return this.GetDatas(strsql);
         }
+
+        /// <summary>更新用户的启用/禁用状态</summary>
+        public bool UpdateUserStatus(int id, bool status)
+        {
+            string strsql = "update users set status = @status where id = @id";
+            using (MySqlConnection conn = new MySqlConnection(dbConfig))
+            using (MySqlCommand cmd = new MySqlCommand(strsql, conn))
+            {
+                cmd.Parameters.Add(new MySqlParameter("@status", MySqlDbType.Bit) { Value = status });
+                cmd.Parameters.Add(new MySqlParameter("@id", MySqlDbType.Int32) { Value = id });
+                conn.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
+        /// <summary>删除用户</summary>
+        public bool DeleteUser(int id)
+        {
+            string strsql = "delete from users where id = @id";
+            using (MySqlConnection conn = new MySqlConnection(dbConfig))
+            using (MySqlCommand cmd = new MySqlCommand(strsql, conn))
+            {
+                cmd.Parameters.Add(new MySqlParameter("@id", MySqlDbType.Int32) { Value = id });
+                conn.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
     }
 }

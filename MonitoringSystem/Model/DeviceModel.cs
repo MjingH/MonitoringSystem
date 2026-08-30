@@ -35,7 +35,6 @@ namespace MonitoringSystem.Model
 
                 // 触发状态变更事件，把当前实例传出去
                 RunningStateChanged?.Invoke(DeviceId, value);
-
                 this.RaisePropertyChanged();
             }
         }

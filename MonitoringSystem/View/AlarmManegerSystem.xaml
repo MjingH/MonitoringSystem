@@ -9,11 +9,11 @@
              d:DesignHeight="650" d:DesignWidth="1200"
              Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
-        
+
         <!-- 添加以下行，覆盖非活动选中背景 -->
-    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" 
-                     Color="#232838" />
-        
+        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" 
+            Color="#696e8a" />
+
         <!-- ============ 通用颜色与控件样式 ============ -->
         <Style x:Key="FilterLabel" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#9AA3B8"/>

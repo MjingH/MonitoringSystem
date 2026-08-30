@@ -312,7 +312,7 @@
                 <StackPanel>
                     <Image  Source="/Assets/Image/系统-4.png" Height="60" Margin="10"/>
 
-                    <TextBlock Text="温度湿度监控系统" Foreground="White" FontSize="25"/>
+                    <TextBlock Text="科技节能管理系统" Foreground="White" FontSize="25"/>
                 </StackPanel>
             </Border>
 
