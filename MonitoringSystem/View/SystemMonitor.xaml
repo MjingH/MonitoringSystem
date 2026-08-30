@@ -373,7 +373,7 @@
             </Grid.RowDefinitions>
             <TextBlock  Text="系统总览" Foreground="White" HorizontalAlignment="Right" Margin="0,20,20,20" FontSize="14"/>
 
-            <UniformGrid Grid.Row="1" Rows="1">
+            <!--<UniformGrid Grid.Row="1" Rows="1">
                 <StackPanel>
                     <TextBlock Text="监控值" HorizontalAlignment="Center" Foreground="#99FFFFFF"/>
                     <myCtl:CricularProgressBar1 Height="60" Width="60" Value="100" Margin="0,15" ForeColor="#20c9b4"/>
@@ -386,7 +386,7 @@
                     <TextBlock Text="监控值" HorizontalAlignment="Center" Foreground="#99FFFFFF"/>
                     <myCtl:CricularProgressBar1 Height="60" Width="60" Value="30" ForeColor="#38baec" Margin="0,15"/>
                 </StackPanel>
-            </UniformGrid>
+            </UniformGrid>-->
 
             <TextBlock Text="实时日记" Foreground="#44FFFFFF" Grid.Row="2" Margin="5,10"/>
 
