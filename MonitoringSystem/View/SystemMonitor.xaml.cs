@@ -92,7 +92,9 @@ namespace MonitoringSystem.View
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_isMoving)
+            // 必须同时满足“按下状态”与“左键仍处于按下”，
+            // 防止 MouseLeftButtonUp 丢失后 _isMoving 卡在 true，导致松开鼠标画布仍跟着移动
+            if (_isMoving && e.LeftButton == MouseButtonState.Pressed)
             {
                 Point currentPoint = e.GetPosition(sender as Canvas);
 

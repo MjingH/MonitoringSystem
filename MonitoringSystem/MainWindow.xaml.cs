@@ -30,18 +30,9 @@ namespace MonitoringSystem
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-           if (e.LeftButton == MouseButtonState.Pressed) {
-                try
-                {
-                    this.DragMove(); 
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-                
-            }
+            // 窗口拖动统一由标题栏的 Grid_MouseLeftButtonDown 处理，
+            // 此处不再调用 DragMove，避免拦截子页面（如 SystemMonitor 画布）的鼠标事件，
+            // 导致 Canvas 的 MouseLeftButtonUp 丢失、拖拽状态卡住。
         }
 
         private void Min_Click(object sender, RoutedEventArgs e)
@@ -51,23 +42,31 @@ namespace MonitoringSystem
 
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.ClickCount == 2)
+            // 只处理鼠标左键
+            if (e.ChangedButton != MouseButton.Left)
+                return;
+
+            if (e.ClickCount == 2)
             {
                 // 双击标题栏最大化
                 Max_Click(sender, e);
             }
             else
             {
+                // DragMove 只能在主鼠标按钮处于按下状态时调用，
+                // 快速连点/事件冒泡时序下左键可能已释放，需先校验再调用
+                if (e.LeftButton != MouseButtonState.Pressed)
+                    return;
+
                 try
                 {
                     // 拖拽移动窗口
                     this.DragMove();
                 }
-                catch (Exception ex)
+                catch (InvalidOperationException)
                 {
-                    Console.WriteLine(ex.Message);
+                    // 左键状态异常时忽略，避免拖拽抛异常
                 }
-                
             }
         }
 
