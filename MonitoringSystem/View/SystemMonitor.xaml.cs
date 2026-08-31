@@ -70,25 +70,6 @@ namespace MonitoringSystem.View
             (sender as Canvas).ReleaseMouseCapture();
         }
 
-        private void CoolingPump_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Pinpeline_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void CoolingPump_Loaded_1(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Pinpeline_Loaded_1(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {

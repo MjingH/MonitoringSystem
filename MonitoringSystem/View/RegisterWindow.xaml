@@ -7,7 +7,7 @@
         xmlns:base="clr-namespace:MonitoringSystem.Base"
         mc:Ignorable="d"
         Name="window"
-        Title="注册账号" Height="540" Width="650"
+        Title="注册账号" Height="540" Width="600"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None" Background="{x:Null}" AllowsTransparency="True">
@@ -103,29 +103,29 @@
 
     <Border Margin="5" Background="White" CornerRadius="10" MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <Border.Effect>
-            <DropShadowEffect Color="Gray" Direction="0" ShadowDepth="0" BlurRadius="10" Opacity="0.3"/>
+            <DropShadowEffect Color="#6f6f6f" Direction="0" ShadowDepth="0" BlurRadius="10" Opacity="0.3"/>
         </Border.Effect>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="40"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!-- 顶部标题栏 -->
-            <Border  CornerRadius="10,10,0,0" Margin="2" Background="Gray">
+            <Border  CornerRadius="10,10,0,0" Margin="2" Background="#FFDBDFDD">
                 <Grid>
                     
                     <Button HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5"
                             Background="Transparent" BorderThickness="0" Cursor="Hand"
                             Command="{Binding CloseCommand}" CommandParameter="{Binding ElementName=window}">
-                        <Path Data="M0,0 L12,12 M0,12 L12,0" Stroke="White" StrokeThickness="2"
-                              Width="12" Height="12" Stretch="Uniform"/>
+                        <Path Data="M0,0 L12,12 M0,12 L12,0" Stroke="#FF424242"  StrokeThickness="2"
+                              Width="15" Height="15" Stretch="Uniform" Margin="5"/>
                     </Button>
                 </Grid>
             </Border>
 
             <!-- 表单 -->
-            <StackPanel Grid.Row="1" Margin="100,20">
+            <StackPanel Grid.Row="1" Margin="110,20">
                 <TextBlock Text="欢迎注册"  FontSize="20" FontWeight="Bold"
            VerticalAlignment="Bottom" Margin="-5,0,0,0"/>
                 <!--<ProgressBar Height="2" IsIndeterminate="True" Foreground="Orange"
@@ -147,7 +147,7 @@
                         <KeyBinding Key="Enter" Command="{Binding RegisterCommand}" CommandParameter="{Binding ElementName=window}"/>
                     </PasswordBox.InputBindings>
                 </PasswordBox>
-
+                
                 <TextBlock Text="确认密码" Foreground="#555" FontSize="13" Margin="0,14,0,6"/>
                 <PasswordBox Style="{StaticResource InputPasswordBoxStyle}"
                              base:PasswordhHelper.Attached="True"

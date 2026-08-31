@@ -321,9 +321,9 @@ namespace MonitoringSystem.BLL
                     result.Message = "用户名不能为空";
                     return result;
                 }
-                if (string.IsNullOrEmpty(password) || password.Length < 6)
+                if (string.IsNullOrEmpty(password) || password.Length < 4)
                 {
-                    result.Message = "密码长度不能少于 6 位";
+                    result.Message = "密码长度不能少于 4 位";
                     return result;
                 }
 

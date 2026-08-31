@@ -142,7 +142,7 @@
                                        CommandParameter="{Binding Path=(base:GlobalMonitor.DeviceList)[3]}"
                                        IsFault="{Binding Path=(base:GlobalMonitor.DeviceList)[3].IsWarning}" 
                                        IsRunning="{Binding Path=(base:GlobalMonitor.DeviceList)[3].IsRuning}"/>
-                    <myCtl:CoolingPump Panel.ZIndex="2" Width="67" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="295,0,0,52" IsFault="True" IsRunning="True" Loaded="CoolingPump_Loaded_1"/>
+                    <myCtl:CoolingPump Panel.ZIndex="2" Width="67" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="295,0,0,52" IsFault="True" IsRunning="True" />
                     <myCtl:CoolingPump Panel.ZIndex="2" Width="66" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="307,0,0,96" IsFault="True" IsRunning="True"/>
 
                     <!--管道-->
@@ -180,7 +180,7 @@
 
 
                     <myCtl:Pinpeline Height="5" Width="41" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="282,0,0,126" Direction="2" LiquidColor="Green"/>
-                    <myCtl:Pinpeline Height="5" Width="41" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="249,0,0,40" Direction="2" LiquidColor="Green" Loaded="Pinpeline_Loaded"/>
+                    <myCtl:Pinpeline Height="5" Width="41" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="249,0,0,40" Direction="2" LiquidColor="Green" />
                     <myCtl:Pinpeline Height="5" Width="41" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="267,0,0,83" Direction="2" LiquidColor="Green"/>
 
                     <myCtl:Pinpeline Height="5" Width="95" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="248,0,0,37" Direction="2" LiquidColor="Green">
@@ -230,7 +230,7 @@
                             </TransformGroup>
                         </myCtl:Pinpeline.RenderTransform>
                     </myCtl:Pinpeline>
-                    <myCtl:Pinpeline Panel.ZIndex="2" Height="5" Width="10" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="312,0,0,98" Direction="2" LiquidColor="Green" Loaded="Pinpeline_Loaded_1">
+                    <myCtl:Pinpeline Panel.ZIndex="2" Height="5" Width="10" CapRadius="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="312,0,0,98" Direction="2" LiquidColor="Green" >
 
                         <myCtl:Pinpeline.RenderTransform>
                             <TransformGroup>

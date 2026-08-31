@@ -14,6 +14,7 @@ namespace MonitoringSystem.Base
 {
     public class GlobalMonitor
     {
+
         public static List<StorageModel> StorageList { get; set; }
         public static List<DeviceModel> DeviceList { get; set; }
         public static ObservableCollection<LogModel> LogList { get; set; } = new ObservableCollection<LogModel>();
@@ -25,7 +26,7 @@ namespace MonitoringSystem.Base
         static bool isRunning = true;
         static Task mainTask = null;
         static RTU rtu;
-
+         
         public static void Start(Action successAction, Action<string> faultAction)
         {
             mainTask = Task.Run(async () =>

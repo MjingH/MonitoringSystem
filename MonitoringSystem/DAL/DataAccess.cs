@@ -17,7 +17,7 @@ namespace MonitoringSystem.DAL
         String dbConfig = ConfigurationManager.ConnectionStrings["db_config"].ToString();
         MySqlConnection conn; //表示与 MySQL 数据库服务器之间的一个物理连接。它是所有数据库操作的第一步，负责打开、关闭连接，并管理连接状态
         MySqlCommand cmd;  // 表示要对数据库执行的一条 SQL 语句或一个存储过程。它负责发送命令并接收执行结果。
-        MySqlDataAdapter adapter; // 充当 DataSet 和数据库之间的桥梁，用于填充数据（Fill）和更新数据（Update）。它本身不管理连接，但内部使用命令对象执行操作
+        MySqlDataAdapter adapter; // 它的唯一作用是填充（Fill）——把查回来的数据塞进本地的 DataTable 或 DataSet 里，方便离线操作。
         MySqlTransaction trans; // 表示一个数据库事务，用于将多个数据库操作组合成一个原子工作单元，保证这些操作要么全部成功提交，要么全部回滚。
 
         // 销毁数据
@@ -229,7 +229,7 @@ namespace MonitoringSystem.DAL
         /// <summary>检查用户名是否已存在</summary>
         public bool CheckUserNameExists(string username)
         {
-            string strsql = "select count(1) from users where user_name=@user_name";
+            string strsql = "select count(*) from users where user_name=@user_name";
             using (MySqlConnection conn = new MySqlConnection(dbConfig))
             using (MySqlCommand cmd = new MySqlCommand(strsql, conn))
             {

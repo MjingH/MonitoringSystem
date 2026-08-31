@@ -80,9 +80,9 @@ namespace MonitoringSystem.ViewModel
                 MessageError = "密码不能为空";
                 return;
             }
-            if (UserModel.Password.Length < 6)
+            if (UserModel.Password.Length < 4)
             {
-                MessageError = "密码长度不能少于 6 位";
+                MessageError = "密码长度不能少于 4 位";
                 return;
             }
             if (UserModel.Password != ConfirmPassword)
