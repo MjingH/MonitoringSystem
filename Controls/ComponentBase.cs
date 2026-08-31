@@ -20,7 +20,7 @@ namespace WpfControlLibrary1
 
         private void CoolingTower_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // 取消权重
+            //   取消权重
             this.IsSelected = !this.IsSelected;
 
 

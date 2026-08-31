@@ -14,22 +14,12 @@ namespace MonitoringSystem.Base
 {
     public class GlobalMonitor
     {
-
-        
         public static List<StorageModel> StorageList { get; set; }
-
         public static List<DeviceModel> DeviceList { get; set; }
         public static ObservableCollection<LogModel> LogList { get; set; } = new ObservableCollection<LogModel>();
         public static ObservableCollection<LogModel> AllLogList { get; set; } = new ObservableCollection<LogModel>();
-
-
-
         public static string CurrentUsername { get; set; }
-
-        
-
         public static SerialInfo SerialInfo { get; set; }
-
         public static ObservableCollection<UserModel> UserList { get; set; }
 
         static bool isRunning = true;
