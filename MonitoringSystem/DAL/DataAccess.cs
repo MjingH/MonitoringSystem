@@ -225,5 +225,37 @@ namespace MonitoringSystem.DAL
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
+
+        /// <summary>检查用户名是否已存在</summary>
+        public bool CheckUserNameExists(string username)
+        {
+            string strsql = "select count(1) from users where user_name=@user_name";
+            using (MySqlConnection conn = new MySqlConnection(dbConfig))
+            using (MySqlCommand cmd = new MySqlCommand(strsql, conn))
+            {
+                cmd.Parameters.Add(new MySqlParameter("@user_name", MySqlDbType.VarChar, 50) { Value = username });
+                conn.Open();
+                return Convert.ToInt64(cmd.ExecuteScalar()) > 0;
+            }
+        }
+
+        /// <summary>新增用户（注册），passwordMd5 为已加盐 MD5 后的密码</summary>
+        public bool InsertUser(string username, string passwordMd5, bool sex)
+        {
+            string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string strsql = "insert into users(user_name,password,status,sex,create_time,updata_time) " +
+                            "values(@user_name,@pwd,1,@sex,@create_time,@updata_time)";
+            using (MySqlConnection conn = new MySqlConnection(dbConfig))
+            using (MySqlCommand cmd = new MySqlCommand(strsql, conn))
+            {
+                cmd.Parameters.Add(new MySqlParameter("@user_name", MySqlDbType.VarChar, 50) { Value = username });
+                cmd.Parameters.Add(new MySqlParameter("@pwd", MySqlDbType.VarChar, 100) { Value = passwordMd5 });
+                cmd.Parameters.Add(new MySqlParameter("@sex", MySqlDbType.Byte) { Value = sex ? (byte)1 : (byte)0 });
+                cmd.Parameters.Add(new MySqlParameter("@create_time", MySqlDbType.VarChar, 50) { Value = now });
+                cmd.Parameters.Add(new MySqlParameter("@updata_time", MySqlDbType.VarChar, 50) { Value = now });
+                conn.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
     }
 }

@@ -123,6 +123,7 @@
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\RealTimeCurveViewModel.cs" />
+    <Compile Include="ViewModel\RegisterViewModel.cs" />
     <Compile Include="ViewModel\ReportViewModel.cs" />
     <Compile Include="ViewModel\SystemMonitorViewModel.cs" />
     <Compile Include="ViewModel\SystemOperationViewModel.cs" />
@@ -137,6 +138,9 @@
     </Compile>
     <Compile Include="View\RealTimeCurve.xaml.cs">
       <DependentUpon>RealTimeCurve.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RegisterWindow.xaml.cs">
+      <DependentUpon>RegisterWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ReportManagement.xaml.cs">
       <DependentUpon>ReportManagement.xaml</DependentUpon>
@@ -182,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\RealTimeCurve.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RegisterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

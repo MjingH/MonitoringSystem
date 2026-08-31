@@ -49,6 +49,8 @@ namespace MonitoringSystem.ViewModel
 
         public CommandBase1 LoginCommand { get; set; }
 
+        public CommandBase1 RegisterCommand { get; set; }
+
         public UserModel UserModel { get; set; } = new UserModel();
 
         public MonitorSystemBLL monitorSystemBLL { get; set; }
@@ -276,6 +278,19 @@ namespace MonitoringSystem.ViewModel
 
             LoginCommand.DoCanExecute = new Func<object,bool>(o => { return true; });
             LoginCommand.DoExecute = new Action<object>(DoLogin);
+
+            this.RegisterCommand = new CommandBase1();
+            RegisterCommand.DoCanExecute = new Func<object, bool>(o => { return true; });
+            RegisterCommand.DoExecute = new Action<object>(OpenRegisterWindow);
+        }
+
+        /// <summary>
+        /// 打开注册窗口
+        /// </summary>
+        private void OpenRegisterWindow(object o)
+        {
+            var registerWindow = new RegisterWindow();
+            registerWindow.ShowDialog();
         }
 
         private void DoLogin(object o)

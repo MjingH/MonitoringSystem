@@ -9,7 +9,7 @@ namespace Communication.Modbus
 {
     public class RTU
     {
-
+        //
         public Action<int, List<byte>> ResponseData;
         private static RTU _instance; // 实例
         private static SerialInfo _serialInfo;

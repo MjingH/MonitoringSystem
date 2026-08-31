@@ -345,7 +345,6 @@
                 <ToggleButton IsChecked="{Binding CurrentDevice.IsRuning}" Template="{StaticResource StateButtonTemplate}" Style="{x:Null}"/>
             </StackPanel>
             <!--报警灯-->
-
             <ToggleButton  Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="False" IsChecked="{Binding CurrentDevice.IsWarning}" Template="{StaticResource WarningButtonTemplate}"/>
             <!--报警信息-->
             <ItemsControl Grid.Row="3" ItemsSource="{Binding CurrentDevice.WarningMessageList}" Margin="8">

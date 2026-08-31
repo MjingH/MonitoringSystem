@@ -309,5 +309,48 @@ namespace MonitoringSystem.BLL
             }
             return result;
         }
+
+        /// <summary>注册新用户（校验用户名唯一、密码长度，并按登录一致的加盐规则入库）</summary>
+        public DataResult<string> RegisterUser(string username, string password, bool sex)
+        {
+            DataResult<string> result = new DataResult<string>();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(username))
+                {
+                    result.Message = "用户名不能为空";
+                    return result;
+                }
+                if (string.IsNullOrEmpty(password) || password.Length < 6)
+                {
+                    result.Message = "密码长度不能少于 6 位";
+                    return result;
+                }
+
+                username = username.Trim();
+                if (da.CheckUserNameExists(username))
+                {
+                    result.Message = "该用户名已被注册";
+                    return result;
+                }
+
+                // 与登录校验一致的加盐规则：MD5(password + "@" + username)
+                string pwd = MD5Provider.GetMD5String(password + "@" + username);
+                if (da.InsertUser(username, pwd, sex))
+                {
+                    result.State = true;
+                    result.Message = "注册成功";
+                }
+                else
+                {
+                    result.Message = "注册失败，请稍后重试";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+            }
+            return result;
+        }
     }
 }

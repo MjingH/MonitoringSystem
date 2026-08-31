@@ -65,6 +65,36 @@
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+
+            <ControlTemplate x:Key="ButtonTemplate" TargetType="Button">
+                <Border Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}" 
+                        CornerRadius="5">
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <!-- 悬停：变亮 + 轻微上浮阴影效果 -->
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#106EBE"/>
+                        <Setter Property="Foreground" Value="#007DFA"/>
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                    <!-- 按下：颜色变深 + 缩小模拟“按下去” -->
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#005A9E"/>
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="0.98" ScaleY="0.98"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
             
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             
@@ -272,16 +302,16 @@
             <Border Background="#007DFA" CornerRadius="10,10,0,0" Margin="2" >
                 <!--左上角-->
                 <Grid>
-                    
+
                     <Border VerticalAlignment="Top" HorizontalAlignment="Right">
                         <StackPanel Orientation="Horizontal">
-                           
+
                             <!--<Button  x:Name="HamburgerButton"  Style="{StaticResource WindowControlButtonStyle}">
                                 <Path Data="M736 352H288a32 32 0 1 1 0-64h448a32 32 0 0 1 0 64z m0 192H288a32 32 0 1 1 0-64h448a32 32 0 0 1 0 64z m0 192H288a32 32 0 0 1 0-64h448a32 32 0 0 1 0 64z"  
                                   Width="12" Height="12" Stretch="Uniform" Stroke="White" StrokeThickness="1.2"/>
                             </Button>-->
                             <Menu Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0">
-                             
+
                                 <MenuItem  Style="{StaticResource MenuItemStyle}">
                                     <MenuItem.Icon>
                                         <Path Data="M736 352H288a32 32 0 1 1 0-64h448a32 32 0 0 1 0 64z m0 192H288a32 32 0 1 1 0-64h448a32 32 0 0 1 0 64z m0 192H288a32 32 0 0 1 0-64h448a32 32 0 0 1 0 64z"  
@@ -373,7 +403,7 @@
               IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
 
             </Grid>
-            <!--<TextBlock Text="忘记密码" HorizontalAlignment="Right" Grid.Row="2" FontSize="18" Margin="0,0,40,0"/>-->
+            <Button Foreground="#007DFA" Template="{Binding Source={StaticResource ButtonTemplate}}" Background="Transparent" BorderThickness="0" Content="注册" HorizontalAlignment="Left" Grid.Row="2" FontSize="16" Margin="40,0,40,0" Command="{Binding RegisterCommand}" Cursor="Hand"/>
         </Grid>
     </Border>
 </Window>
