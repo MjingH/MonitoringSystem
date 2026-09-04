@@ -45,10 +45,7 @@ namespace MonitoringSystem.ViewModel
             get { return _isShowDetail; }
             set 
             { 
-                _isShowDetail = value;
-
-               
-
+                _isShowDetail = value;       
                 this.RaisePropertyChanged();
             }
         }
@@ -91,7 +88,7 @@ namespace MonitoringSystem.ViewModel
 
             //this.LogList.Add(new LogModel { RowNumber = 1,DeviceNameList=GlobalMonitor.DeviceNameList ,LogInfo = "已启动", LogType = Base.LogType.Info });
 
-            //  测试数据
+            //测试数据
             TestDevice = new DeviceModel();
             TestDevice.DeviceName = "冷却塔 1#";
             TestDevice.IsRuning = true;

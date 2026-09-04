@@ -413,10 +413,11 @@
             <TabItem Header="用户管理" Margin="0,2,4,-2">
                 <Border Style="{StaticResource PanelCard}">
                     <Grid>
-                        <Grid.ColumnDefinitions>
+                        
+                        <!--<Grid.ColumnDefinitions>
                             <ColumnDefinition Width="217*"/>
                             <ColumnDefinition Width="955*"/>
-                        </Grid.ColumnDefinitions>
+                        </Grid.ColumnDefinitions>-->
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
@@ -426,7 +427,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
                                 <DataGridTextColumn Header="用户名" Binding="{Binding UserName}" Width="200"/>
-                                <DataGridTextColumn Header="姓名" Binding="{Binding Name}" Width="140"/>
+                                <!--<DataGridTextColumn Header="姓名" Binding="{Binding Name}" Width="140"/>-->
                                 <DataGridTemplateColumn Header="性别" Width="80">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>

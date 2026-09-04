@@ -355,11 +355,9 @@
                                 <DropShadowEffect Color="White" ShadowDepth="0" Direction="0" Opacity="0.7" BlurRadius="1"/>
                             </TextBlock.Effect>
                         </TextBlock>
-
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
         </Grid>
 
         <Grid   Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Margin="182,0,10,0" >

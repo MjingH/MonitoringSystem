@@ -112,7 +112,6 @@ namespace WpfControlLibrary1
 
 
 
-
         public object CommandParameter
         {
             get { return (object)GetValue(CommandParameterProperty); }

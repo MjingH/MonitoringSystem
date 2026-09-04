@@ -95,7 +95,7 @@ namespace Communication.Modbus
                     return;
                 }
             }
-            Console.WriteLine(byteBuffer[0] +"|" +  byteBuffer[1] +"|" +  receByteCount + "啊1111111111");
+           
             // 总长度 = 地址(1) + 功能码(1) + 长度(1) + 数据(N) + CRC(2) = N + 5
             if (byteBuffer[1] == _funcCode && receByteCount >= _wordLen + 5)
             {
@@ -104,7 +104,7 @@ namespace Communication.Modbus
                 // 返回数据
                 ResponseData?.Invoke(_startAddr, new List<byte>(SubyteArray(byteBuffer, 0, _wordLen + 3)));
             }
-            Console.WriteLine(byteBuffer[0] + "|" + byteBuffer[1] + "|" + receByteCount + "啊1111111111");
+           
         }
 
         // 发送报文

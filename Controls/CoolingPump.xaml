@@ -36,7 +36,7 @@
                 <VisualState Name="FaultState">
                     <Storyboard>
                         <ColorAnimationUsingKeyFrames RepeatBehavior="Forever"
-                                               Storyboard.TargetName="gsRed" Storyboard.TargetProperty="Color">
+                                               Storyboard.TargetName="gsRed" Storyboard.TargetProperty="Color"> 
                             <DiscreteColorKeyFrame Value="Red" KeyTime="0:0:0.5"/>
                             <DiscreteColorKeyFrame Value="Gray" KeyTime="0:0:1"/>
                         </ColorAnimationUsingKeyFrames>

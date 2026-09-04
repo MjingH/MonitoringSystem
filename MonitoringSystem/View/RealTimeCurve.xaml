@@ -39,6 +39,9 @@
                                             <Trigger Property="IsMouseOver" Value="True">
                                                 <Setter TargetName="bd" Property="BorderBrush" Value="#5A6078"/>
                                             </Trigger>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Setter TargetName="arrow" Property="Data" Value="M0,0 L4,-4 L8,0"/>
+                                            </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
                                 </ToggleButton.Template>
@@ -113,7 +116,7 @@
         <Border Grid.Row="1" Background="#B31E2230" CornerRadius="8" Padding="16,12" Margin="0,12,0,0">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding StatusMessage}" Foreground="#7A8099" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding StatusMessage}" Foreground="Orange" FontSize="12" VerticalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="选择设备：" Foreground="#9AA3B8" FontSize="13" VerticalAlignment="Center"/>
@@ -122,7 +125,6 @@
                               DisplayMemberPath="DeviceName"
                               SelectedItem="{Binding SelectedDevice}"/>
                 </StackPanel>
-               
             </DockPanel>
         </Border>
 
@@ -132,16 +134,16 @@
                                 Foreground="White"
                                 LegendLocation="Top"
                                 Hoverable="True"
-                                DataTooltip="{x:Null}">
+                                DataTooltip="{x:Null}" Margin="2,0,-2,0"> 
                 <lvc:CartesianChart.AxisX>
-                    <lvc:Axis Title="采样点（时间）" Foreground="#AAFFFFFF" ShowLabels="True">
+                    <lvc:Axis Title="{Binding XTitle}" Foreground="#AAFFFFFF" ShowLabels="True">
                         <lvc:Axis.Separator>
-                            <lvc:Separator Stroke="#2E3348"/>
+                            <lvc:Separator Step="1" Stroke="#2E3348"/>
                         </lvc:Axis.Separator>
                     </lvc:Axis>
                 </lvc:CartesianChart.AxisX>
                 <lvc:CartesianChart.AxisY>
-                    <lvc:Axis Title="数值(单位)" Foreground="#AAFFFFFF" ShowLabels="True">
+                    <lvc:Axis Title="数值" Foreground="#AAFFFFFF" ShowLabels="True">
                         <lvc:Axis.Separator>
                             <lvc:Separator Stroke="#2E3348"/>
                         </lvc:Axis.Separator>

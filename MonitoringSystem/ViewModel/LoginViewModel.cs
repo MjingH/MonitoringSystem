@@ -55,7 +55,7 @@ namespace MonitoringSystem.ViewModel
 
         public MonitorSystemBLL monitorSystemBLL { get; set; }
 
-        private string _currtentUsername;
+        //private string _currtentUsername;
 
       
 

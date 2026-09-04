@@ -160,8 +160,6 @@
                                 <!--RadioButton提供一组互斥的选项，让用户只能从中选择一个，且选中后除非点击其他选项，否则不会自动取消 -->
                                 <RadioButton  Content="系统监控" CommandParameter="MonitoringSystem.View.SystemMonitor" Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\系统监控.png" Style="{StaticResource NavTabButtonStyle}" IsChecked="True"/>
                                 <RadioButton Content="实时曲线" CommandParameter="MonitoringSystem.View.RealTimeCurve" Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\实时曲线.png" Style="{StaticResource NavTabButtonStyle}"/>
-                                <!--<RadioButton Content="历史曲线" CommandParameter="MonitoringSystem.View.HistoryCurve" Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\历史曲线.png" Style="{StaticResource NavTabButtonStyle}"/>-->
-                                <!--<RadioButton Content="控制策略"  Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\控制策略.png" Style="{StaticResource NavTabButtonStyle}"/>-->
                                 <RadioButton Content="系统操作" CommandParameter="MonitoringSystem.View.SystemOperation" Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\系统操作.png" Style="{StaticResource NavTabButtonStyle}"/>
                                 <RadioButton Content="报警管理" CommandParameter="MonitoringSystem.View.AlarmManegerSystem"  Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\报警管理.png" Style="{StaticResource NavTabButtonStyle}"/>
                                 <RadioButton Content="报表管理" CommandParameter="MonitoringSystem.View.ReportManagement" Tag="D:\c#\MonitoringSystem\MonitoringSystem\Assets\Image\报表管理.png" Style="{StaticResource NavTabButtonStyle}"/>
@@ -220,7 +218,7 @@
                 Orientation="Horizontal" 
                 VerticalAlignment="Bottom" 
                 HorizontalAlignment="Right" 
-                Margin="20,15"
+                Margin="0,0,45,0"
                         x:Name="UserInfoPanel"
                 MouseLeftButtonDown="StackPanel_MouseLeftButtonDown"
                 Cursor="Hand">
@@ -232,7 +230,7 @@
                     <Border.Background>
                         <ImageBrush ImageSource="/Assets/Image/用户.png"/>
                     </Border.Background>
-                </Border>
+                </Border>                                                       
 
                 <!-- 弹出下拉菜单（Popup） -->
                 <Popup x:Name="UserMenuPopup" 

@@ -18,14 +18,7 @@ namespace MonitoringSystem.ViewModel
         /// <summary>设备列表（全局静态数据）</summary>
         public ObservableCollection<DeviceModel> DeviceList { get;set; }
 
-        private  ObservableCollection<string> _deviceNames;
-
-        public ObservableCollection<string> DeviceNames
-        {
-            get { return _deviceNames; }
-            set { _deviceNames = value;RaisePropertyChanged(); }
-        }
-
+        public string XTitle { get; set; } = "采样点序号";
 
         private DeviceModel _selectedDevice;
         public DeviceModel SelectedDevice
@@ -66,18 +59,6 @@ namespace MonitoringSystem.ViewModel
             
 
         }
-
-        //private void InitDeviceNames()
-        //{
-        //    if (DeviceList != null && DeviceList.Count > 0)
-        //    {
-        //        DeviceNames = new ObservableCollection<string>(DeviceList.Select(d => d.DeviceName));
-        //    }
-        //    else
-        //    {
-        //        DeviceNames = new ObservableCollection<string>();
-        //    }
-        //}
 
         /// <summary>根据选中设备重建曲线系列（系列直接引用实时 Values，自动刷新）</summary>
         private void RebuildSeries()
